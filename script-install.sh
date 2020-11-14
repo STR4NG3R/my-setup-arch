@@ -39,11 +39,13 @@ rofi pulseaudio picom noto-fonts noto-fonts-cjk \
 neofetch lxappearance light lightdm lightdm-gtk-greeter \
 thunar thunar-archive-plugin flameshot \
 ttf-nerd-fonts-symbols-mono xclip powerline-fonts \
-evolution gnome-keyring dusnt
+evolution gnome-keyring dunst
 
 sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-cp -R "$PATH/config/" ~/.config/
+cp -R "$PATH/config/" "$HOME/.config/"
+cp "$PATH/.tmux.conf" "$HOME/"
+cp "$PATH/.bashrc" "$HOME/"
 
 systemctl enable lightdm
 systemctl enable networkmanager
@@ -59,3 +61,18 @@ Section "InputClass"
 EndSection
 EOF
 
+cat << EOF | sudo tee /etc/systemd/system/powertop.service
+[Unit]
+Description=PowerTOP auto tune
+
+[Service]
+Type=idle
+Environment="TERM=dumb"
+ExecStart=/usr/sbin/powertop --auto-tune
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable powertop.service
