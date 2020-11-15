@@ -39,7 +39,7 @@ rofi pulseaudio picom noto-fonts noto-fonts-cjk \
 neofetch lxappearance light lightdm lightdm-gtk-greeter \
 thunar thunar-archive-plugin flameshot \
 ttf-nerd-fonts-symbols-mono xclip powerline-fonts \
-evolution gnome-keyring dunst
+evolution gnome-keyring dunst python-psutil
 
 sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
