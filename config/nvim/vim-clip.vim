@@ -1,21 +1,9 @@
-"let NERDTreeShowHidden=1
-autocmd VimEnter * NERDTree |
-"" NERDTree configuration
-let g:NERDTreeChDirMode=2
-let g:nerdtree_tabs_focus_on_files=1
-let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
-let g:NERDTreeWinSize = 50
-let g:NERDTreeWinPos = "right"
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
-noremap <silent> <F2> :NERDTreeFind<CR>
-noremap <F3> :NERDTreeToggle<CR>
-map <C-t> :NERDTreeToggle<CR>
 " grep.vim
 nnoremap <silent> <leader>f :Rgrep<CR>
 let Grep_Default_Options = '-IR'
 let Grep_Skip_Files = '*.log *.db'
 let trep_Skip_Dirs = '.git node_modules'
-" terminal emulation
+"terminal emulation
 "noremap <silent> <leader>t  :below|:terminal
 
 " CTRL-X and SHIFT-Del are Cut
@@ -56,7 +44,7 @@ if has("virtualedit")
     endif
     let c = col(".")
     normal! i
-    if col(".") < c " compensate for i<ESC> moving the cursor left
+v   if col(".") < c " compensate for i<ESC> moving the cursor left
       normal! l
     endif
     let &ve = ove

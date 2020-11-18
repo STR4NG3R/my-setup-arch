@@ -28,7 +28,7 @@ cd ..
 
 pacman -S \
 qtile neovim xorg zsh wget \
-python git arandr adapta-gtk-theme \
+python git adapta-gtk-theme \
 pavucontrol firefox gvfs gvfs-mtp \
 gvfs-smb gzip alacritty adobe-source-code-pro-fonts \
 adobe-source-han-sans-otc-fonts openssh npm \
@@ -47,6 +47,15 @@ cp -R "$PATH/config/" "$HOME/.config/"
 cp "$PATH/.tmux.conf" "$HOME/"
 cp "$PATH/.bashrc" "$HOME/"
 
+
+echo "${yellowColour}Installing nvim config${endColour}"
+curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+touch "$PATH/.vimrc"
+ln -s "$HOME/.vimrc" "$HOME/.config/nvim/init.vim"
+
+pip install --user neovim
+pip install --user jedi
+
 systemctl enable lightdm
 systemctl enable networkmanager
 systemctl enable ufw
@@ -61,18 +70,3 @@ Section "InputClass"
 EndSection
 EOF
 
-cat << EOF | sudo tee /etc/systemd/system/powertop.service
-[Unit]
-Description=PowerTOP auto tune
-
-[Service]
-Type=idle
-Environment="TERM=dumb"
-ExecStart=/usr/sbin/powertop --auto-tune
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-systemctl daemon-reload
-systemctl enable powertop.service

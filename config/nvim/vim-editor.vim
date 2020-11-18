@@ -1,6 +1,55 @@
 if (has("termguicolors"))
  set termguicolors
 endif
+"Configuration for coc-explorer
+let g:coc_explorer_global_presets = {
+\   '.vim': {
+\     'root-uri': '~/.vim',
+\   },
+\   'tab': {
+\     'position': 'tab',
+\     'quit-on-open': v:true,
+\   },
+\   'floating': {
+\     'position': 'floating',
+\     'open-action-strategy': 'sourceWindow',
+\   },
+\   'floatingTop': {
+\     'position': 'floating',
+\     'floating-position': 'center-top',
+\     'open-action-strategy': 'sourceWindow',
+\   },
+\   'floatingLeftside': {
+\     'position': 'floating',
+\     'floating-position': 'left-center',
+\     'floating-width': 50,
+\     'open-action-strategy': 'sourceWindow',
+\   },
+\   'floatingRightside': {
+\     'position': 'floating',
+\     'floating-position': 'right-center',
+\     'floating-width': 50,
+\     'open-action-strategy': 'sourceWindow',
+\   },
+\   'simplify': {
+\     'file-child-template': '[selection | clip | 1] [indent][icon | 1] [filename omitCenter 1]'
+\   }
+\ }
+
+nmap <F3> :CocCommand clangd.switchSourceHeader<CR>
+
+" Use preset argument to open it
+nmap <space>ed :CocCommand explorer --preset .vim<CR>
+nmap <space>ef :CocCommand explorer --preset floating<CR>
+
+" List all presets
+nmap <space>el :CocList explPresets
+nmap <C-t> :CocCommand explorer<CR>
+
+nmap <S-h> :bp<CR>
+nmap <S-l> :bn<CR>
+map <leader>c :bdelete<cr>
+map <leader>w :bw<cr>
 
 "Basic configuration
 set ve+=onemore
@@ -67,7 +116,7 @@ function! s:check_back_space() abort
 endfunction
 
 " Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+imap <silent><expr> <c-space> coc#refresh()
 
 " Make <CR> auto-select the first completion item and notify coc.nvim to
 " format on enter, <cr> could be remapped by other vim plugin
@@ -119,11 +168,6 @@ nmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>ac  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
 nmap <leader>qf  <Plug>(coc-fix-current)
-
-map <S-h> :bprevious<cr>
-map <S-l> :bNext<cr>
-map <leader>c :bd!<cr>
-map <leader>w :bw<cr>
 
 " Map function and class text objects
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
@@ -189,4 +233,3 @@ nmap <siltent> gd <Plug>(coc-definition)
 nmap <siltent> gt <Plug>(coc-type-definition)
 nmap <siltent> gi <Plug>(coc-implementation)
 nmap <siltent> gr <Plug>(coc-references)
-
