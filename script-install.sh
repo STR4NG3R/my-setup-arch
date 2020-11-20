@@ -21,10 +21,10 @@ echo $PATH
 
 echo -e "${yellowColour}Installing packages... ${endColour}"
 pacman -S git
+
 git clone https://aur.archlinux.org/trizen.git
 cd "$PATH/trizen"
 makepkg -si
-cd ..
 
 pacman -S \
 qtile neovim xorg zsh wget \
@@ -43,15 +43,12 @@ evolution gnome-keyring dunst python-psutil
 
 sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
+echo "${yellowColour}Installing nvim config${endColour}"
 cp -R "$PATH/config/" "$HOME/.config/"
 cp "$PATH/.tmux.conf" "$HOME/"
 cp "$PATH/.bashrc" "$HOME/"
-
-
-echo "${yellowColour}Installing nvim config${endColour}"
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-touch "$PATH/.vimrc"
-ln -s "$HOME/.vimrc" "$HOME/.config/nvim/init.vim"
+echo "${redColour}Remeber do :PlugInstall at start nvim${endColour}"i
 
 pip install --user neovim
 pip install --user jedi

@@ -1,43 +1,11 @@
+set noswapfile
 if (has("termguicolors"))
  set termguicolors
 endif
+
 "Configuration for coc-explorer
-let g:coc_explorer_global_presets = {
-\   '.vim': {
-\     'root-uri': '~/.vim',
-\   },
-\   'tab': {
-\     'position': 'tab',
-\     'quit-on-open': v:true,
-\   },
-\   'floating': {
-\     'position': 'floating',
-\     'open-action-strategy': 'sourceWindow',
-\   },
-\   'floatingTop': {
-\     'position': 'floating',
-\     'floating-position': 'center-top',
-\     'open-action-strategy': 'sourceWindow',
-\   },
-\   'floatingLeftside': {
-\     'position': 'floating',
-\     'floating-position': 'left-center',
-\     'floating-width': 50,
-\     'open-action-strategy': 'sourceWindow',
-\   },
-\   'floatingRightside': {
-\     'position': 'floating',
-\     'floating-position': 'right-center',
-\     'floating-width': 50,
-\     'open-action-strategy': 'sourceWindow',
-\   },
-\   'simplify': {
-\     'file-child-template': '[selection | clip | 1] [indent][icon | 1] [filename omitCenter 1]'
-\   }
-\ }
-
-nmap <F3> :CocCommand clangd.switchSourceHeader<CR>
-
+nmap <F5> :CocCommand clangd.switchSourceHeader<CR>
+ 
 " Use preset argument to open it
 nmap <space>ed :CocCommand explorer --preset .vim<CR>
 nmap <space>ef :CocCommand explorer --preset floating<CR>
@@ -46,10 +14,11 @@ nmap <space>ef :CocCommand explorer --preset floating<CR>
 nmap <space>el :CocList explPresets
 nmap <C-t> :CocCommand explorer<CR>
 
-nmap <S-h> :bp<CR>
-nmap <S-l> :bn<CR>
-map <leader>c :bdelete<cr>
-map <leader>w :bw<cr>
+nmap <S-Tab> :bp<CR>
+nmap <Tab> :bn<CR>
+"map <Leader>c :bp\|bd # <CR>
+map <Leader>c :bd <CR>
+map <Leader>w :bw <CR>
 
 "Basic configuration
 set ve+=onemore
@@ -186,7 +155,7 @@ nnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<
 nnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 inoremap <nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
 inoremap <nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-
+ 
 " NeoVim-only mapping for visual mode scroll
 "Useful on signatureHelp after jump placeholder of snippet expansion
 vnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#nvim_scroll(1, 1) : "\<C-f>"

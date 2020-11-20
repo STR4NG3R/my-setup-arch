@@ -54,8 +54,6 @@ def window_to_next_group(qtile):
 
 keys = [
     Key([mod], 'b', lazy.run_extension(extension.WindowList())),
-    # FUNCTION KEYS
-    Key([], "F12", lazy.spawn('xfce4-terminal --drop-down')),
     # SUPER + FUNCTION KEYS
     Key([mod], "e", lazy.spawn('code')),
     Key([mod], "g", lazy.window.toggle_fullscreen()),
@@ -63,29 +61,23 @@ keys = [
     Key([mod], "q", lazy.window.kill()),
     Key([mod], "r", lazy.spawn('rofi-theme-selector')),
     Key([mod], "w", lazy.spawn('firefox')),
-    Key([mod], "t", lazy.spawn('xfce4-terminal')),
-    Key([mod], "v", lazy.spawn('xfce4-terminal -e nvim')),
+    Key([mod], "v", lazy.spawn('alacritty -e nvim')),
     Key([mod], "Escape", lazy.spawn('xkill')),
     Key([mod], "Return", lazy.spawn('alacritty')),
     Key([mod], "space", lazy.spawn("rofi -modi drun -show drun -show-icons")),
-    Key([mod], "c", lazy.spawn('xfce4-terminal  -e cmus')),
+    Key([mod], "c", lazy.spawn('alacritty  -e cmus')),
     # SUPER + SHIFT KEYS
     Key([mod, "shift"], "Return", lazy.spawn('thunar')),
     Key([mod, "shift"], "r", lazy.restart()),
-    Key([mod, "shift"], "l", lazy.shutdown()),
+    Key([mod, "shift"], "w", lazy.shutdown()),
     # CONTROL + ALT KEYS
-    Key(["mod1", "control"], "b", lazy.spawn('thunar')),
-    Key(["mod1", "control"], "f", lazy.spawn('firefox')),
-    Key(["mod1", "control"], "i", lazy.spawn('nitrogen')),
     Key(["mod1", "control"], "o", lazy.spawn(home + '/.config/qtile/scripts/picom-toggle.sh')),
     Key(["mod1", "control"], "r", lazy.spawn('rofi-theme-selector')),
-    Key(["mod1", "control"], "s", lazy.spawn('spotify')),
-    Key(["mod1", "control"], "t", lazy.spawn('alacritty')),
     Key(["mod1", "control"], "u", lazy.spawn('pavucontrol')),
     Key(["mod1", "control"], "Return", lazy.spawn('alacritty')),
     # MOVE TO SCREEN
-    Key(["mod1"], "h", lazy.to_screen(0)),
-    Key(["mod1"], "l", lazy.to_screen(1)),
+    Key([mod, "mod1"], "h", lazy.to_screen(0)),
+    Key([mod, "mod1"], "l", lazy.to_screen(1)),
     # VARIETY KEYS WITH PYWAL
     Key(["mod1", "shift"], "f", lazy.spawn(home + '/.config/qtile/scripts/set-pywal.sh -f')),
     Key(["mod1", "shift"], "p", lazy.spawn(home + '/.config/qtile/scripts/set-pywal.sh -p')),
@@ -414,6 +406,20 @@ floating_layout = layout.Floating(float_rules=[
 auto_fullscreen = True
 focus_on_window_activation = "smart"  # smart or focus
 wmname = "LG3D"
+
+
+@lazy.function
+def float_to_front(qtile):
+    """
+    Bring all floating windows of the group to front
+    """
+    global floating_windows
+    floating_windows = []
+    for window in qtile.currentGroup.windows:
+        if window.floating:
+            window.cmd_bring_to_front()
+            floating_windows.append(window)
+    floating_windows[-1].cmd_focus()
 
 
 @hook.subscribe.startup_once
