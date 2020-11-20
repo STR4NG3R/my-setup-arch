@@ -34,7 +34,7 @@ gvfs-smb gzip alacritty adobe-source-code-pro-fonts \
 adobe-source-han-sans-otc-fonts openssh npm \
 networkmanager network-manager-applet yarn \
 nodejs htop polkit polkit-gnome redshift tlp \
-tmux xfce4-terminal ufw vlc udiskie udisks2 \
+tmux ufw vlc udiskie udisks2 \
 rofi pulseaudio picom noto-fonts noto-fonts-cjk \
 neofetch lxappearance light lightdm lightdm-gtk-greeter \
 thunar thunar-archive-plugin flameshot \
