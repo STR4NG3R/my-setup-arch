@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-readonly PATH =$(dirname $(readlink -f "$0"))
+PATH_DIR=$(dirname $(readlink -f "$0"))
+USER_HOME=$(eval echo ~${SUDO_USER})
 
 greenColour="\e[0;32m\033[1m"
 endColour="\033[0m\e[0m"
@@ -17,13 +18,15 @@ if [ "$(id -u)" != 0 ]; then
 fi
 
 echo -e "${greenColour}Installation Begin...${endColour}"
-echo $PATH
+echo $PATH_DIR
+echo $USER_HOME
+exit
 
 echo -e "${yellowColour}Installing packages... ${endColour}"
 pacman -S git
 
 git clone https://aur.archlinux.org/trizen.git
-cd "$PATH/trizen"
+cd "$PATH_DIR/trizen"
 makepkg -si
 
 pacman -S \
@@ -44,9 +47,9 @@ evolution gnome-keyring dunst python-psutil
 sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 echo "${yellowColour}Installing nvim config${endColour}"
-cp -R "$PATH/config/" "$HOME/.config/"
-cp "$PATH/.tmux.conf" "$HOME/"
-cp "$PATH/.bashrc" "$HOME/"
+cp -R "$PATH_DIR/config/" "$USER_HOME/.config/"
+cp "$PATH_DIR/.tmux.conf" "$USER_HOME/"
+cp "$PATH_DIR/.bashrc" "$USER_HOME/"
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 echo "${redColour}Remeber do :PlugInstall at start nvim${endColour}"i
 
