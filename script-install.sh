@@ -54,7 +54,7 @@ pip install --user neovim
 pip install --user jedi
 
 systemctl enable lightdm
-systemctl enable networkmanager
+systemctl enable NetworkManager
 systemctl enable ufw
 systemctl enable tlp
 
