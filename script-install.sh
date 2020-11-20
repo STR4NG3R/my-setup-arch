@@ -20,7 +20,6 @@ fi
 echo -e "${greenColour}Installation Begin...${endColour}"
 echo $PATH_DIR
 echo $USER_HOME
-exit
 
 echo -e "${yellowColour}Installing packages... ${endColour}"
 pacman -S git
