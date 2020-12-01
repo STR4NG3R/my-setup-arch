@@ -61,7 +61,7 @@ keys = [
     Key([mod], "q", lazy.window.kill()),
     Key([mod], "r", lazy.spawn('rofi-theme-selector')),
     Key([mod], "w", lazy.spawn('firefox')),
-    Key([mod], "v", lazy.spawn('alacritty -e nvim')),
+    Key([mod], "v", lazy.spawn('nvim')),
     Key([mod], "Escape", lazy.spawn('xkill')),
     Key([mod], "Return", lazy.spawn('alacritty')),
     Key([mod], "space", lazy.spawn("rofi -modi drun -show drun -show-icons")),
@@ -170,7 +170,7 @@ for i in groups:
 
 def init_layout_theme():
     return {
-        "margin": 2,
+        "margin": 3,
         "border_width": 3,
         "border_focus": "#A77AC4",
         "border_normal": "#7197E7"
@@ -231,10 +231,12 @@ def init_widgets_list():
             foreground=colors["pink"],
             background=colors["dark"],
         ),
-        widget.Image(
-            scale=True,
-            filename="~/.config/qtile/bluedarkbar.png",
-            background=colors["dark"]
+        widget.TextBox(
+            text="",
+            padding=-1,
+            fontsize=34,
+            background=colors["dark"],
+            foreground=colors["blue"]
         ),
         widget.Battery(
             battery_name="BAT1",
@@ -248,10 +250,12 @@ def init_widgets_list():
             update_interval=1,
             fontsize=12
         ),
-        widget.Image(
-            scale=True,
-            filename="~/.config/qtile/pinkbar.png",
-            background=colors["pink"]
+        widget.TextBox(
+            text="",
+            padding=-1,
+            fontsize=34,
+            background=colors["blue"],
+            foreground=colors["pink"]
         ),
         widget.TextBox(
             font="Ubuntu Bold",
@@ -273,10 +277,12 @@ def init_widgets_list():
             foreground=colors["white"],
             background=colors["pink"],
         ),
-        widget.Image(
-            scale=True,
-            filename="~/.config/qtile/bluebar.png",
-            background=colors["blue"]
+        widget.TextBox(
+            text="",
+            padding=-1,
+            fontsize=34,
+            background=colors["pink"],
+            foreground=colors["blue"]
         ),
         widget.TextBox(
             font="Ubuntu Bold",
@@ -290,10 +296,12 @@ def init_widgets_list():
             background=colors["blue"],
             format="%A, %B %d - %H:%M"
         ),
-        widget.Image(
-            scale=True,
-            filename="~/.config/qtile/pinkbar.png",
-            background=colors["pink"]
+        widget.TextBox(
+            text="",
+            padding=-1,
+            fontsize=34,
+            background=colors["blue"],
+            foreground=colors["pink"]
         ),
         widget.Cmus(
             max_chars=25,
