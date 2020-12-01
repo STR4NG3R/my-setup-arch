@@ -44,7 +44,7 @@ if has("virtualedit")
     endif
     let c = col(".")
     normal! i
-v   if col(".") < c " compensate for i<ESC> moving the cursor left
+    if col(".") < c " compensate for i<ESC> moving the cursor left
       normal! l
     endif
     let &ve = ove

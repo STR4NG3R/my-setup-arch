@@ -14,12 +14,6 @@ nmap <space>ef :CocCommand explorer --preset floating<CR>
 nmap <space>el :CocList explPresets
 nmap <C-t> :CocCommand explorer<CR>
 
-nmap <S-Tab> :bp<CR>
-nmap <Tab> :bn<CR>
-"map <Leader>c :bp\|bd # <CR>
-map <Leader>c :bd <CR>
-map <Leader>w :bw <CR>
-
 "Basic configuration
 set ve+=onemore
 set nu

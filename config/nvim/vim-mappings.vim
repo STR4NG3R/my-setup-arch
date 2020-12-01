@@ -1,7 +1,9 @@
 let mapleader=','
 
+map <M-q> :q! <CR>
+
 "Reload without quit vim
-"nnoremap <leader>rv :source $HOME/.config/nvim/init.vim<CR>
+nnoremap <leader>rv :source $HOME/.config/nvim/init.vim<CR>
 nnoremap <leader>v :e ~/.config/nvim/init.vim<CR>
 map <C-a> <esc>ggVG<CR>
 imap ii <Esc>
@@ -9,10 +11,8 @@ imap ii <Esc>
 nmap <S-Tab> :bp<CR>
 nmap <Tab> :bn<CR>
 "map <Leader>c :bp\|bd # <CR>
-map <Leader>c :bd <CR>
+map <Leader>c :bd! <CR>
 map <Leader>w :bw <CR>
-
-
 map <Leader>s :vsp <CR>
 map <Leader>v :sp <CR>
 
@@ -73,6 +73,15 @@ endif
 inoremap <expr> <c-j> ("\<C-n>")
 inoremap <expr> <c-k> ("\<C-p>")
 
-"Insert commentary
-vnoremap <silent> <space>/ :call Comment()
+" Insert commentary
+map <Leader>/ :Commentary <CR>
 
+" Git config files
+nnoremap gps :Gpush
+nnoremap gc :Gcommit
+nnoremap gs :Gstatus
+nnoremap gpl :Gpull
+nnoremap gr :Gremove
+nnoremap gre :Grename
+nnoremap gl :Glog
+nnoremap gm :Gmerge 
