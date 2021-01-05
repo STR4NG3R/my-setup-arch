@@ -119,9 +119,11 @@ alias ls='ls --color=auto'
 alias install='sudo pacman -S'
 alias remove='sudo pacman -R'
 alias update='sudo pacman -Syu'
-alias remove='sudo pacman -Scc'
+alias clean_cache='sudo pacman -Scc'
 alias search='sudo pacman -Syy'
 alias auto_clean='sudo pacman -R $(pacman -Qdtq)'
 alias download_mp3='youtube-dl -x --embed-thumbnail --audio-format mp3'
 
 
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

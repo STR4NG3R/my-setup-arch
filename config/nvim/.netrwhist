@@ -1,9 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =7
-let g:netrw_dirhist_7='/home/aether/Documentos/web/type_orm/packages/web/src/providers/User'
-let g:netrw_dirhist_6='/home/aether/Documentos/web/type_orm/packages/web/src/providers/App'
-let g:netrw_dirhist_5='/home/aether/Documentos/web/type_orm/packages/web/src/routes/Admin'
-let g:netrw_dirhist_4='/home/aether/Documentos/web/type_orm/packages/web/src/routes/Auth'
-let g:netrw_dirhist_3='/home/aether/Documentos/web/type_orm/packages/web/src/routes/Admin'
-let g:netrw_dirhist_2='/home/aether/Documentos/web/type_orm/packages/web/src/routes/Common'
-let g:netrw_dirhist_1='/home/aether/Documentos/web/type_orm/packages/web/src/routes/Admin'

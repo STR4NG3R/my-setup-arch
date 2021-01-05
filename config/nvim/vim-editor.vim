@@ -40,6 +40,7 @@ set smartcase
 " TextEdit might fail if hidden is not set.
 set hidden
 syntax enable
+filetype plugin indent on
 syntax on
 " Some servers have issues with backup files, see #649.
 set nobackup

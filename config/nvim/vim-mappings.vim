@@ -1,7 +1,12 @@
 let mapleader=','
 
-map <M-q> :q! <CR>
+"close all buffers
+map <M-c> :bufdo bd <CR>
 
+"quit window
+map <M-q> :q! <CR>
+"write
+map <M-w> :w <CR>
 "Reload without quit vim
 nnoremap <leader>rv :source $HOME/.config/nvim/init.vim<CR>
 nnoremap <leader>v :e ~/.config/nvim/init.vim<CR>
@@ -10,8 +15,8 @@ imap ii <Esc>
 
 nmap <S-Tab> :bp<CR>
 nmap <Tab> :bn<CR>
-"map <Leader>c :bp\|bd # <CR>
-map <Leader>c :bd! <CR>
+map <Leader>c :bp \| bd # <CR>
+"map <Leader>c :bd! <CR>
 map <Leader>w :bw <CR>
 map <Leader>s :vsp <CR>
 map <Leader>v :sp <CR>

@@ -22,7 +22,7 @@ echo $PATH_DIR
 echo $USER_HOME
 
 sudo pacman -Sy --noconfirm  archlinux-keyring 
-sudo pacman -Su
+sudo pacman -Syu --noconfirm
 
 echo -e "${yellowColour}Installing packages... ${endColour}"
 pacman -S --noconfirm git
@@ -31,33 +31,54 @@ git clone https://aur.archlinux.org/trizen.git
 cd "$PATH_DIR/trizen"
 makepkg -si
 
-pacman -S --noconfirm \
-qtile neovim xorg zsh xfce4-taskmanager \
+trizen -S --noconfirm xorg zsh xfce4-taskmanager \
 python git adapta-gtk-theme \
 pavucontrol firefox gvfs gvfs-mtp \
 gzip alacritty adobe-source-code-pro-fonts \
 adobe-source-han-sans-otc-fonts openssh npm \
-networkmanager network-manager-applet yarn \
+networkmanager yarn \
 nodejs htop polkit polkit-gnome redshift tlp \
 tmux ufw vlc udiskie udisks2 \
-rofi pulseaudio picom noto-fonts noto-fonts-cjk \
-neofetch lxappearance light lightdm lightdm-gtk-greeter \
+rofi pulseaudio noto-fonts noto-fonts-cjk ttf-font-awesome \
+neofetch lxappearance blight lightdm lightdm-gtk-greeter \
 thunar thunar-archive-plugin flameshot \
 ttf-nerd-fonts-symbols xclip powerline-fonts \
 dunst python-psutil pip \
-ristretto wget
+ristretto wget playerctl neovim-git \
+crda  picom-jonaburg-git ranger
 
-trizen -S --noconfirm zsh-theme-powerlevel10k-git \
-oh-my-zsh-powerline-theme-git
+git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
+
 
 echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc
 
-echo "${yellowColour}Installing nvim config${endColour}"
+echo "${yellowColour}Installing Common Packages${endColour}"
 cp -R "$PATH_DIR/config/" "$USER_HOME/.config/"
 cp "$PATH_DIR/.tmux.conf" "$USER_HOME/"
+cp "$PATH_DIR/.zshrc" "$USER_HOME/"
 cp "$PATH_DIR/.bashrc" "$USER_HOME/"
+cp "$PATH_DIR/.p10k.zsh" "$USER_HOME/"
+
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 echo "${redColour}Remeber do :PlugInstall at start nvim${endColour}"
+sleep 3
+
+echo "${turquoiseColour}All common packages and config files have been installed"
+echo "Choose your WM Setup${redColour}"
+echo "1.- [q]tile"
+echo "2.- [i]3${endColour}"
+
+read -p "" opt
+case $opt in
+    [qQ]* ) 
+        source "$PATH_DIR/installation_folder/qtile_install.sh"
+        install_qtile $PATH_DIR $USER_HOME
+        echo "${greenColour}Installation Succesful";;
+    [iI]* )
+        source "$PATH_DIR/installation_folder/i3_install.sh"
+        install_i3 $PATH_DIR $USER_HOME
+        echo "${greenColour}Installation Succesful";;
+esac
 
 pip install --user neovim
 pip install --user jedi
