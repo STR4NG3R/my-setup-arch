@@ -27,8 +27,8 @@ sudo pacman -Syu --noconfirm
 echo -e "${yellowColour}Installing packages... ${endColour}"
 pacman -S --noconfirm git
 
-git clone https://aur.archlinux.org/trizen.git
-cd "$PATH_DIR/trizen"
+git clone https://aur.archlinux.org/yay-git.git
+cd "$PATH_DIR/yay-git"
 makepkg -si
 
 trizen -S --noconfirm xorg zsh xfce4-taskmanager \
