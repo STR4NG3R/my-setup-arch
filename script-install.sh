@@ -31,7 +31,7 @@ git clone https://aur.archlinux.org/yay-git.git
 cd "$PATH_DIR/yay-git"
 makepkg -si
 
-trizen -S --noconfirm xorg zsh xfce4-taskmanager \
+yay -S --noconfirm xorg zsh xfce4-taskmanager \
 python git adapta-gtk-theme \
 pavucontrol firefox gvfs gvfs-mtp \
 gzip alacritty adobe-source-code-pro-fonts \
