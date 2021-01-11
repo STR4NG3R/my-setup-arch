@@ -1,5 +1,5 @@
 # My Arch Setups
-____I did this script because i dont like waste time dowloanding and copy conf files_
+_I did this script because i dont like waste time dowloanding and copy conf files_
 
 ## This script only work on post installation of Arch based Distros.
 
