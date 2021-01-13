@@ -46,7 +46,7 @@ def switch_screen(index, lazy):
     def __inner(qtile):
         global current_screen, max_screens
         current_screen += index
-        if current_screen > 0 and current_screen < max_screens:
+        if current_screen >= 0 and current_screen < max_screens:
             lazy.to_screen(current_screen)
         else:
             current_screen -= index
