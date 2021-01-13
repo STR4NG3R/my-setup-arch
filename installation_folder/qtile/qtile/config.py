@@ -37,40 +37,21 @@ mod1 = "alt"
 mod2 = "control"
 home = os.path.expanduser('~')
 
-
-@lazy.function
-def window_to_prev_group(qtile):
-    if qtile.currentWindow is not None:
-        i = qtile.groups.index(qtile.currentGroup)
-        qtile.currentWindow.togroup(qtile.groups[i - 1].name)
-
-
-@lazy.function
-def window_to_next_group(qtile):
-    if qtile.currentWindow is not None:
-        i = qtile.groups.index(qtile.currentGroup)
-        qtile.currentWindow.togroup(qtile.groups[i + 1].name)
-
-
 current_screen = 0
 max_screens = 0
 
 
-def move_screen(qtile, action):
-    global current_screen
-    global max_screens
-    change = False
-    if action == "next":
-        if current_screen < max_screens:
-            current_screen += 1
-            change = True
-    elif action == "previous":
-        if current_screen > 0:
-            current_screen -= 1
-            change = True
-    if change:
+def switch_screen(index, lazy):
+    @lazy.function
+    def __inner(qtile):
+        global current_screen, max_screens
+        current_screen += index
+        if current_screen > 0 and current_screen < max_screens:
+            lazy.to_screen(current_screen)
+        else:
+            current_screen -= index
         lazy.spawn(f'notify-send "Move to Screen {current_screen}"')
-        lazy.to_screen(current_screen)
+    return __inner
 
 
 keys = [
@@ -84,9 +65,10 @@ keys = [
     Key([mod], "w", lazy.spawn('firefox')),
     Key([mod], "v", lazy.spawn('nvim')),
     Key([mod], "Escape", lazy.spawn('xkill')),
+    Key(["mod1"], "p", lazy.spawn('xprop')),
     Key([mod], "Return", lazy.spawn('alacritty')),
     Key([mod], "space",
-        lazy.spawn(home + '/.config/rofi/bin/launcher_colorful')),
+        lazy.spawn(home + '/.config/rofi/launchers/misc/launcher.sh')),
     # Key([mod], "space",lazy.spawn("rofi -modi drun -show drun -show-icons")),
     Key([mod], "c", lazy.spawn('alacritty  -e cmus')),
     # SUPER + SHIFT KEYS
@@ -101,8 +83,10 @@ keys = [
     Key(["mod1", "control"], "u", lazy.spawn('pavucontrol')),
     Key(["mod1", "control"], "Return", lazy.spawn('alacritty')),
     # MOVE TO SCREEN
-    Key([mod, "mod1"], "h", lazy.to_screen(0)),
-    Key([mod, "mod1"], "l", lazy.to_screen(1)),
+    # Key([mod, "mod1"], "h", lazy.to_screen(0)),
+    # Key([mod, "mod1"], "l", lazy.to_screen(1)),
+    Key([mod, "mod1"], "h", switch_screen(-1, lazy)),
+    Key([mod, "mod1"], "l", switch_screen(1, lazy)),
     # SCREENSHOTS
     Key(["shift"], "Print", lazy.spawn('flameshot gui')),
     Key([], "Print", lazy.spawn('xfce4-screenshooter')),
@@ -164,7 +148,8 @@ keys = [
     Key([mod, "shift"], "h", lazy.layout.swap_left()),
     Key([mod, "shift"], "l", lazy.layout.swap_right()),
     # TOGGLE FLOATING LAYOUT
-    Key([mod, "shift"], "space", lazy.window.toggle_floating())]
+    Key([mod, "shift"], "space", lazy.window.toggle_floating())
+    ]
 
 
 groups = []
@@ -175,10 +160,7 @@ group_labels = ["", "", "", "", "", "", "", ""]
 
 for i in range(len(group_names)):
     groups.append(
-        Group(
-            name=group_names[i],
-            label=group_labels[i],
-        )
+        Group(name=group_names[i], label=group_labels[i])
     )
 
 for i in groups:
@@ -203,7 +185,7 @@ colors = {
     "white": ["#ffffff"],
     "pink":  ["#A77AC4"],
     "blue":  ["#7197E7"],
-    "red":   ["#FF0000"],
+    "red":   ["#FF0000"]
 }
 
 
@@ -273,8 +255,8 @@ def init_widgets_list():
         color_separator("dark", "blue"),
         widget.Battery(
             battery_name="BAT1",
-            charge_char='🗲',
-            discharge_char='↯',
+            charge_char='',
+            discharge_char='',
             foreground=colors["white"],
             background=colors["blue"],
             low_percentage=0.15,
@@ -288,21 +270,21 @@ def init_widgets_list():
             font="Ubuntu Bold",
             text="",
             foreground=colors["white"],
-            background=colors["pink"],
+            background=colors["pink"]
         ),
         widget.CPUGraph(
             foreground=colors["white"],
-            background=colors["pink"],
+            background=colors["pink"]
         ),
         widget.TextBox(
             font="Ubuntu Bold",
             text="",
             foreground=colors["white"],
-            background=colors["pink"],
+            background=colors["pink"]
         ),
         widget.MemoryGraph(
             foreground=colors["white"],
-            background=colors["pink"],
+            background=colors["pink"]
         ),
         color_separator("pink", "blue"),
         widget.TextBox(
@@ -333,10 +315,10 @@ def init_widgets_list():
         ),
         widget.PulseVolume(
             foreground=colors["white"],
-            background=colors["pink"],
+            background=colors["pink"]
         ),
         widget.Systray(
-            background=colors["pink"],
+            background=colors["pink"]
         ),
     ]
 
@@ -349,8 +331,8 @@ monitors = subprocess.run(
 
 screens = []
 
+max_screens = len(monitors)
 for monitor in monitors:
-    max_screens += 1
     res = monitor.split('x')
     screens.append(
         Screen(
@@ -439,6 +421,7 @@ floating_layout = layout.Floating(float_rules=[
     {'wmclass': 'feh'},
     {'wmclass': 'ssh-askpass'},
     {'wmclass': 'gpick'},
+    {'wmclass': 'zoom'},
 ],  fullscreen_border_width=0, border_width=0)
 auto_fullscreen = True
 focus_on_window_activation = "focus"  # smart or focus
