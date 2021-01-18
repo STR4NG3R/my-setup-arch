@@ -1,28 +1,61 @@
 {
-  "coc.preferences.useQuickfixForLocations": true,
-  "coc.preferences.snippets.enable": true,
-  "coc.preferences.extensionUpdateCheck": "never",
-  "suggest.disableMenu": true,
-  "suggest.snippetIndicator": "",
-  "tslint.enable": true,
-  "tslint.autoFixOnSave": true,
-  "explorer.width": 30,
-  "explorer.file.root.template": "[icon] [git] [hidden & 1][root]",
-  "explorer.icon.enableNerdfont": true,
-  "explorer.previewAction.onHover": false,
-  "explorer.icon.enableVimDevicons": false,
-  "explorer.file.showHiddenFiles": false,
-  "explorer.position": "right",
-  "coc.preferences.echodocSupport": true, 
-  "coc.preferences.formatOnSaveFiletypes": [
-    "css",
-    "markdown",
-    "Markdown",
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-    "java"
-    ]
+    "coc.preferences.useQuickfixForLocations": true,
+    "coc.preferences.snippets.enable": true,
+    "coc.preferences.extensionUpdateCheck": "never",
+    "suggest.disableMenu": true,
+    "suggest.snippetIndicator": "",
+    "tslint.enable": true,
+    "tslint.autoFixOnSave": true,
+    "explorer.width": 30,
+    "explorer.file.root.template": "[icon] [git] [hidden & 1][root]",
+    "explorer.icon.enableNerdfont": true,
+    "explorer.previewAction.onHover": false,
+    "explorer.icon.enableVimDevicons": false,
+    "explorer.file.showHiddenFiles": false,
+    "explorer.position": "right",
+    "coc.preferences.formatOnSaveFiletypes": [
+        "css",
+        "markdown",
+        "Markdown",
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "java",
+        "json"
+    ],
+    "languageserver": {
+        "go": {
+            "command": "gopls",
+            "rootPatterns": [
+                "go.mod"
+            ],
+            "trace.server": "verbose",
+            "filetypes": [
+                "go"
+            ]
+        },
+        "ccls": {
+            "command": "ccls",
+            "filetypes": [
+                "c",
+                "cc",
+                "cpp",
+                "c++",
+                "objc",
+                "objcpp"
+            ],
+            "rootPatterns": [
+                ".ccls",
+                "compile_commands.json",
+                ".git/",
+                ".hg/"
+            ],
+            "initializationOptions": {
+                "cache": {
+                    "directory": "/tmp/ccls"
+                }
+            }
+        }
+    }
 }
-
