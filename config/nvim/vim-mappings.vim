@@ -2,19 +2,19 @@ let mapleader=','
 
 "close all buffers
 map <M-c> :bufdo bd <CR>
-
 "quit window
 map <M-q> :q! <CR>
 "write
 map <M-w> :w <CR>
+
 "Reload without quit vim
 nnoremap <leader>rv :source $HOME/.config/nvim/init.vim<CR>
 nnoremap <leader>v :e ~/.config/nvim/init.vim<CR>
 map <C-a> <esc>ggVG<CR>
 imap ii <Esc>
 
-nmap <S-Tab> :bp<CR>
-nmap <Tab> :bn<CR>
+nmap <nowait> <S-Tab> :bp<CR>
+nmap <nowait> <Tab> :bn<CR>
 map <Leader>c :bp \| bd # <CR>
 "map <Leader>c :bd! <CR>
 map <Leader>w :bw <CR>
@@ -22,10 +22,10 @@ map <Leader>s :vsp <CR>
 map <Leader>v :sp <CR>
 
 "" Switching windows
-noremap <C-j> <C-w>j
-noremap <C-k> <C-w>k
-noremap <C-l> <C-w>l
-noremap <C-h> <C-w>h
+noremap <nowait> <C-j> <C-w>j<CR> 
+noremap <nowait> <C-k> <C-w>k<CR>
+noremap <nowait> <C-l> <C-w>l<CR>
+noremap <nowait> <C-h> <C-w>h<CR>
 
 "Better identing
 vnoremap < <gv
@@ -49,21 +49,21 @@ xnoremap K :move '<-2<CR>gv-gv
 xnoremap J :move '>+1<CR>gv-gv
 
 " Terminal window navigation
-tnoremap <M-h> <C-\><C-N><C-w>h
-tnoremap <M-j> <C-\><C-N><C-w>j
-tnoremap <M-k> <C-\><C-N><C-w>k
-tnoremap <M-l> <C-\><C-N><C-w>l
-inoremap <M-h> <C-\><C-N><C-w>h
-inoremap <M-j> <C-\><C-N><C-w>j
-inoremap <M-k> <C-\><C-N><C-w>k
-inoremap <M-l> <C-\><C-N><C-w>l
-tnoremap <Esc> <C-\><C-n>
+tnoremap <nowait> <M-h> <C-\><C-N><C-w>h
+tnoremap <nowait> <M-j> <C-\><C-N><C-w>j
+tnoremap <nowait> <M-k> <C-\><C-N><C-w>k
+tnoremap <nowait> <M-l> <C-\><C-N><C-w>l
+inoremap <nowait> <M-h> <C-\><C-N><C-w>h
+inoremap <nowait> <M-j> <C-\><C-N><C-w>j
+inoremap <nowait> <M-k> <C-\><C-N><C-w>k
+inoremap <nowait> <M-l> <C-\><C-N><C-w>l
+tnoremap <nowait> <Esc> <C-\><C-n>
 
 "Resize In vim
-nnoremap <silent> <M-k> :resize -2<CR>
-nnoremap <silent> <M-j> :resize +2<CR>
-nnoremap <silent> <M-h> :vertical resize -2<CR>
-nnoremap <silent> <M-l> :vertical resize +2<CR>
+nnoremap <nowait> <silent> <M-k> :resize +2<CR>
+nnoremap <nowait> <silent> <M-j> :resize -2<CR>
+nnoremap <nowait> <silent> <M-h> :vertical resize -2<CR>
+nnoremap <nowait> <silent> <M-l> :vertical resize +2<CR>
 
 let g:elite_mode=0                      " Disable arrows"
 " Disable arrow movement, resize splits instead.
@@ -75,8 +75,8 @@ if get(g:, 'elite_mode')
 endif
 
 " Better nav for omnicomplete
-inoremap <expr> <c-j> ("\<C-n>")
-inoremap <expr> <c-k> ("\<C-p>")
+" inoremap <expr> <c-j> ("\<C-n>")
+" inoremap <expr> <c-k> ("\<C-p>")
 
 " Insert commentary
 map <Leader>/ :Commentary <CR>
