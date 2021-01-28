@@ -11,25 +11,19 @@ map <M-w> :w <CR>
 nnoremap <leader>rv :source $HOME/.config/nvim/init.vim<CR>
 nnoremap <leader>v :e ~/.config/nvim/init.vim<CR>
 map <C-a> <esc>ggVG<CR>
-imap ii <Esc>
+" imap ii <Esc>
 
-nmap <nowait> <S-Tab> :bp<CR>
-nmap <nowait> <Tab> :bn<CR>
-map <Leader>c :bp \| bd # <CR>
+" map <Leader>c :bp \| bd # <CR>
 "map <Leader>c :bd! <CR>
 map <Leader>w :bw <CR>
 map <Leader>s :vsp <CR>
 map <Leader>v :sp <CR>
 
 "" Switching windows
-noremap <nowait> <C-j> <C-w>j<CR> 
-noremap <nowait> <C-k> <C-w>k<CR>
-noremap <nowait> <C-l> <C-w>l<CR>
-noremap <nowait> <C-h> <C-w>h<CR>
-
-"Better identing
-vnoremap < <gv
-vnoremap > >gv
+nnoremap <nowait><C-j> <C-w>j<CR> 
+nnoremap <nowait><C-k> <C-w>k<CR>
+nnoremap <nowait><C-l> <C-w>l<CR>
+nnoremap <nowait><C-h> <C-w>h<CR>
 
 "" Clean search (highlight)
 nnoremap <silent> <leader><space> :noh<cr>
@@ -86,7 +80,7 @@ nnoremap gps :Gpush
 nnoremap gc :Gcommit
 nnoremap gs :Gstatus
 nnoremap gpl :Gpull
-nnoremap gr :Gremove
+" nnoremap gr :Gremove ;problematic
 nnoremap gre :Grename
 nnoremap gl :Glog
 nnoremap gm :Gmerge 

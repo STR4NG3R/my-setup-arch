@@ -1,3 +1,8 @@
+set autochdir
+
+"Smoothie scroll
+let g:smoothie_no_default_mapings=1
+" let g:smoothie_experimental_mappings=1
 set noswapfile
 if (has("termguicolors"))
  set termguicolors
@@ -31,7 +36,6 @@ set backspace=indent,eol,start
 set shiftwidth=2
 set tabstop=2
 set softtabstop=0
-set shiftwidth=4
 set expandtab
 "" Map leader to ,
 "" Searching set hlsearch set incsearch set ignorecase
@@ -47,7 +51,7 @@ set nobackup
 set nowritebackup
 
 " Give more space for displaying messages.
-set cmdheight=2
+" set cmdheight=2
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
@@ -193,7 +197,7 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
-nmap <siltent> gd <Plug>(coc-definition)
-nmap <siltent> gt <Plug>(coc-type-definition)
-nmap <siltent> gi <Plug>(coc-implementation)
-nmap <siltent> gr <Plug>(coc-references)
+nmap gd <Plug>(coc-definition)
+nmap gt <Plug>(coc-type-definition)
+nmap gi <Plug>(coc-implementation)
+nmap gr <Plug>(coc-references)

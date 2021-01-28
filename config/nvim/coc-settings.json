@@ -2,17 +2,6 @@
     "coc.preferences.useQuickfixForLocations": true,
     "coc.preferences.snippets.enable": true,
     "coc.preferences.extensionUpdateCheck": "never",
-    "suggest.disableMenu": true,
-    "suggest.snippetIndicator": "",
-    "tslint.enable": true,
-    "tslint.autoFixOnSave": true,
-    "explorer.width": 30,
-    "explorer.file.root.template": "[icon] [git] [hidden & 1][root]",
-    "explorer.icon.enableNerdfont": true,
-    "explorer.previewAction.onHover": false,
-    "explorer.icon.enableVimDevicons": false,
-    "explorer.file.showHiddenFiles": false,
-    "explorer.position": "right",
     "coc.preferences.formatOnSaveFiletypes": [
         "css",
         "markdown",
@@ -24,6 +13,36 @@
         "java",
         "json"
     ],
+
+    "suggest.disableMenu": true,
+    "tslint.enable": true,
+    "tslint.autoFixOnSave": true,
+
+    "explorer.width": 30,
+    "explorer.file.root.template": "[icon] [git] [hidden & 1][root]",
+    "explorer.icon.enableNerdfont": true,
+    "explorer.previewAction.onHover": false,
+    "explorer.icon.enableVimDevicons": false,
+    "explorer.file.showHiddenFiles": false,
+    "explorer.position": "right",
+    
+    "codeLens.enable": true,
+    "java.home": "/usr/lib/jvm/default",
+    "java.referencesCodeLens.enabled": true,
+    "java.signatureHelp.enabled": true,
+
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-11",
+            "path": "/usr/lib/jvm/java-11-openjdk",
+            "default": true
+        },
+        {
+            "name": "JavaSE-1.8",
+            "path": "/usr/lib/jvm/java-8-openjdk"
+        }
+    ],
+
     "languageserver": {
         "go": {
             "command": "gopls",
