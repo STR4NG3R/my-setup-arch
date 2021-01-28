@@ -21,17 +21,17 @@ echo -e "${greenColour}Installation Begin...${endColour}"
 echo $PATH_DIR
 echo $USER_HOME
 
-sudo pacman -Sy --noconfirm  archlinux-keyring 
+# sudo pacman -Sy --noconfirm  archlinux-keyring 
 sudo pacman -Syu --noconfirm
 
 echo -e "${yellowColour}Installing packages... ${endColour}"
 pacman -S --noconfirm git
 
-git clone https://aur.archlinux.org/yay-git.git
-cd "$PATH_DIR/yay-git"
+git clone https://aur.archlinux.org/trizen-git.git
+cd "$PATH_DIR/trizen-git"
 makepkg -si
 
-yay -S --noconfirm xorg zsh xfce4-taskmanager \
+trizen -S --noedit --noconfirm xorg zsh xfce4-taskmanager \
 python git adapta-gtk-theme \
 pavucontrol firefox gvfs gvfs-mtp \
 gzip alacritty adobe-source-code-pro-fonts \
@@ -45,7 +45,9 @@ thunar thunar-archive-plugin flameshot \
 ttf-nerd-fonts-symbols xclip powerline-fonts \
 dunst python-psutil pip \
 ristretto wget playerctl neovim-git \
-crda  picom-jonaburg-git ranger
+crda  picom-jonaburg-git ranger ueberzug atool \
+ccls opendoas-sudo
+
 
 git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
 

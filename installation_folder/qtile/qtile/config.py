@@ -1,35 +1,9 @@
-# Copyright (c) 2010 Aldo Cortesi
-# Copyright (c) 2010, 2014 dequis
-# Copyright (c) 2012 Randall Ma
-# Copyright (c) 2012-2014 Tycho Andersen
-# Copyright (c) 2012 Craig Barnes
-# Copyright (c) 2013 horsik
-# Copyright (c) 2013 Tao Sauvage
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
 import os
 import subprocess
 
 from libqtile import bar, extension, hook, layout, widget
 from libqtile.command import lazy
-from libqtile.config import Drag, Group, Key, Screen
+from libqtile.config import Drag, Group, Key, Screen, Match
 
 # mod4 or mod=super key
 mod = "mod4"
@@ -37,21 +11,32 @@ mod1 = "alt"
 mod2 = "control"
 home = os.path.expanduser('~')
 
-current_screen = 0
-max_screens = 0
+GREY = "#222222"
+DARK_GREY = "#111111"
+BLUE = "#007fdf"
+DARK_BLUE = "#002a4a"
+ORANGE = "#dd6600"
+DARK_ORANGE = "#371900"
 
 
-def switch_screen(index, lazy):
-    @lazy.function
-    def __inner(qtile):
-        global current_screen, max_screens
-        current_screen += index
-        if current_screen >= 0 and current_screen < max_screens:
-            lazy.to_screen(current_screen)
-        else:
-            current_screen -= index
-        lazy.spawn(f'notify-send "Move to Screen {current_screen}"')
-    return __inner
+def window_to_previous_screen(qtile):
+    i = qtile.screens.index(qtile.current_screen)
+    if i != 0:
+        group = qtile.screens[i - 1].group.name
+        qtile.current_window.togroup(group)
+
+
+def window_to_next_screen(qtile):
+    i = qtile.screens.index(qtile.current_screen)
+    if i + 1 != len(qtile.screens):
+        group = qtile.screens[i + 1].group.name
+        qtile.current_window.togroup(group)
+
+
+def switch_screens(qtile):
+    i = qtile.screens.index(qtile.current_screen)
+    group = qtile.screens[i - 1].group
+    qtile.current_screen.set_group(group)
 
 
 keys = [
@@ -85,8 +70,10 @@ keys = [
     # MOVE TO SCREEN
     # Key([mod, "mod1"], "h", lazy.to_screen(0)),
     # Key([mod, "mod1"], "l", lazy.to_screen(1)),
-    Key([mod, "mod1"], "h", switch_screen(-1, lazy)),
-    Key([mod, "mod1"], "l", switch_screen(1, lazy)),
+    Key([mod, "mod1"], "h", lazy.prev_screen(),
+        lazy.spawn('notify-send "Hola Mundo"')),
+    Key([mod, "mod1"], "l", lazy.next_screen(),
+        lazy.spawn('notify-send "Adios Mundo"')),
     # SCREENSHOTS
     Key(["shift"], "Print", lazy.spawn('flameshot gui')),
     Key([], "Print", lazy.spawn('xfce4-screenshooter')),
@@ -108,9 +95,6 @@ keys = [
     Key([], "XF86AudioNext", lazy.spawn("playerctl next")),
     Key([], "XF86AudioPrev", lazy.spawn("playerctl prev")),
     Key([], "XF86AudioStop", lazy.spawn("playerctl stop")),
-    # QTILE LAYOUT KEYS
-    Key([mod], "n", lazy.layout.normalize()),
-    Key(["mod1"], "Tab", lazy.next_layout()),
     # NOTIFY KEY LOCK
     Key([], "Caps_Lock",
             lazy.spawn(home + '/.config/scripts/keylock.sh caps')
@@ -124,32 +108,25 @@ keys = [
     Key([mod], "h", lazy.layout.left()),
     Key([mod], "l", lazy.layout.right()),
     # RESIZE UP, DOWN, LEFT, RIGHT
-    Key([mod, "control"], "l",
-        lazy.layout.grow(),
-        lazy.layout.grow_right()
-        ),
-    Key([mod, "control"], "h",
-        lazy.layout.shrink(),
-        lazy.layout.grow_left(),
-        ),
-    Key([mod, "control"], "k",
-        lazy.layout.grow(),
-        lazy.layout.grow_up(),
-        ),
-    Key([mod, "control"], "j",
-        lazy.layout.shrink(),
-        lazy.layout.grow_down(),
-        ),
-    # FLIP LAYOUT FOR MONADTALL/MONADWIDE
-    Key([mod, "shift"], "f", lazy.layout.flip()),
-    # MOVE WINDOWS UP OR DOWN MONADTALL/MONADWIDE LAYOUT
-    Key([mod, "shift"], "k", lazy.layout.shuffle_up()),
-    Key([mod, "shift"], "j", lazy.layout.shuffle_down()),
-    Key([mod, "shift"], "h", lazy.layout.swap_left()),
-    Key([mod, "shift"], "l", lazy.layout.swap_right()),
+    Key([mod, "control"], "h", lazy.layout.grow_left(),
+        desc="Grow window to the left"),
+    Key([mod, "control"], "l", lazy.layout.grow_right(),
+        desc="Grow window to the right"),
+    Key([mod, "control"], "j", lazy.layout.grow_down(),
+        desc="Grow window down"),
+    Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
+    Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
+    Key([mod, "shift"], "h", lazy.layout.shuffle_left(),
+        desc="Move window to the left"),
+    Key([mod, "shift"], "l", lazy.layout.shuffle_right(),
+        desc="Move window to the right"),
+    Key([mod, "shift"], "j", lazy.layout.shuffle_down(),
+        desc="Move window down"),
+    Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
+    Key([mod, "mod1"], "f", lazy.layout.flip()),
     # TOGGLE FLOATING LAYOUT
     Key([mod, "shift"], "space", lazy.window.toggle_floating())
-    ]
+]
 
 
 groups = []
@@ -200,14 +177,7 @@ def init_layout_theme():
 
 layout_theme = init_layout_theme()
 layouts = [
-    layout.MonadTall(**layout_theme),
-    # layout.MonadWide(**layout_theme),
-    # border_focus="#5e81ac", border_normal="#4c566a"),
-    # layout.Matrix(**layout_theme),
-    # layout.Bsp(**layout_theme),
-    # layout.Floating(**layout_theme),
-    # layout.RatioTile(**layout_theme),
-    # layout.Max(**layout_theme)
+    layout.Columns(**layout_theme),
 ]
 
 
@@ -221,106 +191,47 @@ def color_separator(background, foreground):
     )
 
 
-# WIDGETS FOR THE BAR
 def init_widgets_list():
-    return [
+    bar = [
         widget.GroupBox(
-            font="Ubuntu Bold",
-            fontsize=11,
-            padding_y=9,
-            padding_x=5,
-            borderwidth=1,
-            active=colors["white"],
-            inactive=colors["grey"],
-            rounded=True,
-            highlight_method="block",
-            this_current_screen_border=colors["pink"],
-            this_screen_border=colors["dark"],
-            other_current_screen_border=colors["dark"],
-            other_screen_border=colors["dark"],
-            foreground=colors["white"],
-            background=colors["dark"]
-        ),
-        widget.Sep(
-            linewidth=0,
-            foreground=colors["white"],
-            background=colors["dark"]
-        ),
-        widget.WindowName(
-            font="Ubuntu Mono",
-            fontsize=11,
-            foreground=colors["pink"],
-            background=colors["dark"],
-        ),
-        color_separator("dark", "blue"),
-        widget.Battery(
-            battery_name="BAT1",
-            charge_char='',
-            discharge_char='',
-            foreground=colors["white"],
-            background=colors["blue"],
-            low_percentage=0.15,
-            format='{char} {percent:2.0%}',
-            low_foreground=colors["red"],
-            update_interval=1,
-            fontsize=12
-        ),
-        color_separator("blue", "pink"),
-        widget.TextBox(
-            font="Ubuntu Bold",
-            text="",
-            foreground=colors["white"],
-            background=colors["pink"]
-        ),
-        widget.CPUGraph(
-            foreground=colors["white"],
-            background=colors["pink"]
-        ),
-        widget.TextBox(
-            font="Ubuntu Bold",
-            text="",
-            foreground=colors["white"],
-            background=colors["pink"]
-        ),
-        widget.MemoryGraph(
-            foreground=colors["white"],
-            background=colors["pink"]
-        ),
-        color_separator("pink", "blue"),
-        widget.TextBox(
-            font="Ubuntu Bold",
-            text="",
-            foreground=colors["white"],
-            background=colors["blue"],
-            fontsize=11
-        ),
+            font="Ubuntu Bold", fontsize=12, padding=4, borderwidth=1,
+            urgent_border=DARK_BLUE,
+            disable_drag=True, highlight_method="block",
+            this_screen_border=DARK_BLUE, other_screen_border=DARK_ORANGE,
+            this_current_screen_border=BLUE,
+            other_current_screen_border=ORANGE),
+
+        widget.TextBox(text="◤", fontsize=45, padding=-7, foreground=DARK_GREY,
+                       background=GREY),
+
+        widget.TaskList(borderwidth=0, highlight_method="block",
+                        background=GREY,
+                        border=DARK_GREY, urgent_border=DARK_BLUE,
+                        markup_floating="<i>{}</i>",
+                        markup_minimized="<s>{}</s>"),
+
+        widget.Systray(background=GREY, foreground=DARK_GREY),
+        widget.TextBox(text="◤", fontsize=45, padding=-7,
+                       foreground=GREY, background=DARK_GREY),
+        widget.PulseVolume(fmt=" {}", emoji=True, volume_app="pavucontrol"),
+        widget.PulseVolume(volume_app="pavucontrol"),
         widget.Clock(
-            foreground=colors["white"],
-            background=colors["blue"],
-            format="%Y-%m-%d  %H:%M"
-        ),
-        color_separator("blue", "pink"),
-        widget.Cmus(
-            max_chars=25,
-            update_interval=0.5,
-            background=colors["pink"],
-            play_color=colors["white"],
-            noplay_color=colors["dark"]
-        ),
-        widget.TextBox(
-            text="🔊",
-            foreground=colors["white"],
-            background=colors["pink"],
-            fontsize=12
-        ),
-        widget.PulseVolume(
-            foreground=colors["white"],
-            background=colors["pink"]
-        ),
-        widget.Systray(
-            background=colors["pink"]
-        ),
+            format=" ⏱ %H:%M  <span color='#666'>%A %d-%m-%Y</span>  ")
     ]
+    if os.path.isdir("/sys/module/battery"):
+        bar.insert(-1,
+                   widget.Battery(format=" {char} {percent:2.0%} ",
+                                  charge_char="⚡", discharge_char="🔋",
+                                  full_char="⚡", unknown_char="⚡",
+                                  empty_char="⁉️ ", update_interval=2,
+                                  show_short_text=False,
+                                  default_text=""))
+        bar.insert(-1,
+                   widget.Battery(fmt="<span color='#666'>{}</span> ",
+                                  format="{hour:d}:{min:02d}",
+                                  update_interval=2, show_short_text=True,
+                                  default_text=""))
+    return bar
 
 
 monitors = subprocess.run(
@@ -331,7 +242,6 @@ monitors = subprocess.run(
 
 screens = []
 
-max_screens = len(monitors)
 for monitor in monitors:
     res = monitor.split('x')
     screens.append(
@@ -357,91 +267,69 @@ mouse = [
 dgroups_key_binder = None
 dgroups_app_rules = []
 
+workspace = {
+    "a":  ["Navigator", "Firefox",
+           "navigator", "firefox", ],
+    "s": ["QTCreator", "Brackets", "Code-oss", "Code", "Discord",
+          "qtcreator", "brackets", "code-oss", "code", "discord"],
+    "d": ["PacketTracer7"],
+    "u": ["Inkscape", "inkscape", "Gimp", "gimp", "kdenlive"],
+    "i": ["Zoom", "zoom", ],
+    "o":  ["Thunar", "thunar", ],
+    "p":  ["Evolution", "Geary", "Mail", "Thunderbird", "TelegramDesktop",
+           "evolution", "geary", "mail", "thunderbird", "telegramDesktop"]
+}
+
 
 @hook.subscribe.client_new
 def assign_app_group(client):
-    d = {}
-    d["a"] = ["Navigator", "Firefox",
-              "navigator", "firefox", ]
-
-    d["s"] = ["QTCreator", "Brackets", "Code-oss", "Code", "Discord",
-              "qtcreator", "brackets", "code-oss", "code", "discord"]
-
-    d["d"] = ["PacketTracer7"]
-
-    d["f"] = ["DBeaver", "Postman",
-              "dbeaver", "postman"]
-
-    d["u"] = ["Inkscape", "inkscape", "Gimp", "gimp", "kdenlive"]
-
-    d["i"] = ["Zoom",
-              "zoom", ]
-
-    d["o"] = ["Thunar",
-              "thunar", ]
-
-    d["p"] = ["Evolution", "Geary", "Mail", "Thunderbird", "TelegramDesktop",
-              "evolution", "geary", "mail", "thunderbird", "telegramDesktop"]
     wm_class = client.window.get_wm_class()[0]
-
-    for i in range(len(d)):
-        if wm_class in list(d.values())[i]:
-            group = list(d.keys())[i]
+    for i in range(len(workspace)):
+        if wm_class in list(workspace.values())[i]:
+            group = list(workspace.keys())[i]
             client.togroup(group)
             # I dont like to follow the window open in screen so i commnet it
             # client.group.cmd_toscreen()
 
 
 main = None
-follow_mouse_focus = True
+follow_mouse_focus = False
 bring_front_click = False
 cursor_warp = False
 floating_types = ["notification", "toolbar", "splash", "dialog", "utility"]
 floating_layout = layout.Floating(float_rules=[
-    {'wmclass': 'confirm'},
-    {'wmclass': 'dialog'},
-    {'wmclass': 'download'},
-    {'wmclass': 'error'},
-    {'wmclass': 'file_progress'},
-    {'wmclass': 'notification'},
-    {'wmclass': 'splash'},
-    {'wmclass': 'toolbar'},
-    {'wmclass': 'confirmreset'},
-    {'wmclass': 'makebranch'},
-    {'wmclass': 'maketag'},
-    {'wmclass': 'Arandr'},
-    {'wmclass': 'Galculator'},
-    {'wname': 'branchdialog'},
-    {'wmclass': 'flameshot'},
-    {'wmclass': 'pavucontrol'},
-    {'wmclass': 'xfce4-terminal'},
-    {'wmclass': 'xfce4-screenshooter'},
-    {'wname': 'Open File'},
-    {'wname': 'pinentry'},
-    {'wmclass': 'feh'},
-    {'wmclass': 'ssh-askpass'},
-    {'wmclass': 'gpick'},
-    {'wmclass': 'zoom'},
+    *layout.Floating.default_float_rules,
+    Match(wm_class='confirm'),
+    Match(wm_class='dialog'),
+    Match(wm_class='download'),
+    Match(wm_class='error'),
+    Match(wm_class='file_progress'),
+    Match(wm_class='notification'),
+    Match(wm_class='splash'),
+    Match(wm_class='toolbar'),
+    Match(wm_class='feh'),
+    Match(wm_class='ssh-askpass'),
+    Match(wm_class='gpick'),
+    Match(wm_class='zoom'),
+    Match(wm_class='confirmreset'),
+    Match(wm_class='makebranch'),
+    Match(wm_class='maketag'),
+    Match(wm_class='Arandr'),
+    Match(wm_class='Galculator'),
+    Match(wm_class='flameshot'),
+    Match(wm_class='pavucontrol'),
+    Match(wm_class='xfce4-terminal'),
+    Match(wm_class='xfce4-screenshooter'),
+    Match(title='Open File'),
+    Match(title='branchdialog'),
+    Match(title='pinentry'),
 ],  fullscreen_border_width=0, border_width=0)
 auto_fullscreen = True
-focus_on_window_activation = "focus"  # smart or focus
+focus_on_window_activation = "smart"  # smart or focus
 wmname = "LG3D"
 
 
 @hook.subscribe.startup_once
 def start_once():
-    home = os.path.expanduser('~')
+    global home
     subprocess.call([home + '/.config/scripts/autostart.sh'])
-
-
-@hook.subscribe.startup
-def start_always():
-    # Set the cursor to something sane in X
-    subprocess.Popen(['xsetroot', '-cursor_name', 'left_ptr'])
-
-
-@hook.subscribe.client_new
-def set_floating(window):
-    if (window.window.get_wm_transient_for()
-            or window.window.get_wm_type() in floating_types):
-        window.floating = True
