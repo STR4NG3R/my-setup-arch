@@ -15,6 +15,7 @@ _I recommend use Arch or Artrix Linux, because are **debloated** distros_
 ```bash
 git clone https://github.com/STR4NG3R/my-setup-arch
 cd my-setup-arch
+chmod +x script-install.sh
 sudo ./script-install.sh
 ```
 
