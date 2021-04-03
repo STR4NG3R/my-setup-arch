@@ -31,22 +31,44 @@ git clone https://aur.archlinux.org/trizen-git.git
 cd "$PATH_DIR/trizen-git"
 makepkg -si
 
-trizen -S --noedit --noconfirm xorg zsh xfce4-taskmanager \
-python git adapta-gtk-theme \
-pavucontrol firefox gvfs gvfs-mtp \
-gzip alacritty adobe-source-code-pro-fonts \
+trizen -S --noedit --noconfirm zsh  \
+python git gvfs gvfs-mtp \
+gzip alacritty-ligatures adobe-source-code-pro-fonts \
 adobe-source-han-sans-otc-fonts openssh npm \
 networkmanager yarn \
-nodejs htop polkit polkit-gnome redshift tlp \
-tmux ufw vlc udiskie udisks2 \
-rofi pulseaudio noto-fonts noto-fonts-cjk ttf-font-awesome \
-neofetch lxappearance blight lightdm lightdm-gtk-greeter \
-thunar thunar-archive-plugin flameshot \
-ttf-nerd-fonts-symbols xclip powerline-fonts \
-dunst python-psutil pip \
-ristretto wget playerctl neovim-git \
-crda  picom-jonaburg-git ranger ueberzug atool \
-ccls opendoas-sudo
+nodejs htop polkit tlp \
+tmux ufw udiskie udisks2 \
+pulseaudio noto-fonts noto-fonts-cjk ttf-font-awesome \
+neofetcht tf-nerd-fonts-symbols xclip powerline-fonts \
+python-psutil pip wget playerctl neovim-git \
+crda  ranger ueberzug atool \
+ccls opendoas-sudo mupdf bat
+
+echo "${turquoiseColour}Would You like install GUI? y/n"
+read -p "" opt
+case $opt in 
+    [yY]* )
+        trizen -S --noedit --noconfirm xorg xfce4-taskmanager adapta-gtk-theme \
+        pavucontrol firefox polkit-gnome redshift vlc lxappearance rofi \
+        flameshot lightdm lightdm-gtk-greeter thunar thunar-archive-plugin \
+        dunst ristretto picom-jonaburg-git blight
+
+        echo "Choose your WM Setup${redColour}"
+        echo "1.- [q]tile"
+        echo "2.- [i]3${endColour}"
+
+        read -p "" opt
+        case $opt in
+            [qQ]* ) 
+                source "$PATH_DIR/installation_folder/qtile_install.sh"
+                install_qtile $PATH_DIR $USER_HOME
+                echo "${greenColour}Installation Succesful";;
+            [iI]* )
+                source "$PATH_DIR/installation_folder/i3_install.sh"
+                install_i3 $PATH_DIR $USER_HOME
+                echo "${greenColour}Installation Succesful";;
+        esac
+esac
 
 
 git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
@@ -66,21 +88,6 @@ echo "${redColour}Remeber do :PlugInstall at start nvim${endColour}"
 sleep 3
 
 echo "${turquoiseColour}All common packages and config files have been installed"
-echo "Choose your WM Setup${redColour}"
-echo "1.- [q]tile"
-echo "2.- [i]3${endColour}"
-
-read -p "" opt
-case $opt in
-    [qQ]* ) 
-        source "$PATH_DIR/installation_folder/qtile_install.sh"
-        install_qtile $PATH_DIR $USER_HOME
-        echo "${greenColour}Installation Succesful";;
-    [iI]* )
-        source "$PATH_DIR/installation_folder/i3_install.sh"
-        install_i3 $PATH_DIR $USER_HOME
-        echo "${greenColour}Installation Succesful";;
-esac
 
 pip install --user neovim
 pip install --user jedi

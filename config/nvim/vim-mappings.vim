@@ -13,8 +13,10 @@ nnoremap <leader>v :e ~/.config/nvim/init.vim<CR>
 map <C-a> <esc>ggVG<CR>
 " imap ii <Esc>
 
-" map <Leader>c :bp \| bd # <CR>
+map <Leader>c :bp \| bd # <CR>
 "map <Leader>c :bd! <CR>
+map <silent>    <S-Tab> :bNext<CR>
+map <silent>    <Tab> :bnext<CR>
 map <Leader>w :bw <CR>
 map <Leader>s :vsp <CR>
 map <Leader>v :sp <CR>
@@ -73,7 +75,7 @@ endif
 " inoremap <expr> <c-k> ("\<C-p>")
 
 " Insert commentary
-map <Leader>/ :Commentary <CR>
+map <Leader>7 :Commentary <CR>
 
 " Git config files
 nnoremap gps :Gpush

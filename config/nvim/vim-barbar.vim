@@ -47,7 +47,7 @@ let bufferline.icons = v:true
 "
 " NOTE disabled by default because this might cause E541 (too many items)
 "      if you have many tabs open
-let bufferline.clickable = v:false
+let bufferline.clickable = v:true
 
 " If set, the letters for each buffer in buffer-pick mode will be
 " assigned based on their name. Otherwise or in case all letters are

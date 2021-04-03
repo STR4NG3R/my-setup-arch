@@ -61,19 +61,12 @@ keys = [
     Key([mod, "shift"], "r", lazy.restart()),
     Key([mod, "shift"], "w", lazy.shutdown()),
     # CONTROL + ALT KEYS
-    # Key(["mod1"], "l",
-    #    lazy.spawn(home + '/.config/rofi/bin/applet_powermenu')),
-    # Key(["mod1"], "l", lazy.spawn('applet_powermenu')),
     Key(["mod1", "control"], "r", lazy.spawn('rofi-theme-selector')),
     Key(["mod1", "control"], "u", lazy.spawn('pavucontrol')),
     Key(["mod1", "control"], "Return", lazy.spawn('alacritty')),
     # MOVE TO SCREEN
-    # Key([mod, "mod1"], "h", lazy.to_screen(0)),
-    # Key([mod, "mod1"], "l", lazy.to_screen(1)),
-    Key([mod, "mod1"], "h", lazy.prev_screen(),
-        lazy.spawn('notify-send "Hola Mundo"')),
-    Key([mod, "mod1"], "l", lazy.next_screen(),
-        lazy.spawn('notify-send "Adios Mundo"')),
+    Key([mod, "mod1"], "h", lazy.prev_screen()),
+    Key([mod, "mod1"], "l", lazy.next_screen()),
     # SCREENSHOTS
     Key(["shift"], "Print", lazy.spawn('flameshot gui')),
     Key([], "Print", lazy.spawn('xfce4-screenshooter')),
@@ -235,7 +228,7 @@ def init_widgets_list():
 
 
 monitors = subprocess.run(
-    'xrandr | grep "\*" | cut -d" " -f4',
+    r'xrandr | grep "\*" | cut -d" " -f4',
     shell=True,
     stdout=subprocess.PIPE
 ).stdout.decode("UTF-8").strip().split('\n')

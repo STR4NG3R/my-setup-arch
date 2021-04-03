@@ -1,80 +1,65 @@
 {
-    "coc.preferences.useQuickfixForLocations": true,
-    "coc.preferences.snippets.enable": true,
-    "coc.preferences.extensionUpdateCheck": "never",
-    "coc.preferences.formatOnSaveFiletypes": [
-        "css",
-        "markdown",
-        "Markdown",
-        "javascript",
-        "javascriptreact",
-        "typescript",
-        "typescriptreact",
-        "java",
-        "json"
-    ],
+  "coc.preferences.snippets.enable": true,
+  "coc.preferences.extensionUpdateCheck": "never",
+  "coc.preferences.formatOnSaveFiletypes": [
+    "css",
+    "markdown",
+    "Markdown",
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "json"
+  ],
 
-    "suggest.disableMenu": true,
-    "tslint.enable": true,
-    "tslint.autoFixOnSave": true,
+  "suggest.disableMenu": true,
 
-    "explorer.width": 30,
-    "explorer.file.root.template": "[icon] [git] [hidden & 1][root]",
-    "explorer.icon.enableNerdfont": true,
-    "explorer.previewAction.onHover": false,
-    "explorer.icon.enableVimDevicons": false,
-    "explorer.file.showHiddenFiles": false,
-    "explorer.position": "right",
-    
-    "codeLens.enable": true,
-    "java.home": "/usr/lib/jvm/default",
-    "java.referencesCodeLens.enabled": true,
-    "java.signatureHelp.enabled": true,
+  "explorer.width": 30,
+  "explorer.file.root.template": "[icon] [git] [hidden & 1][root]",
+  "explorer.icon.enableNerdfont": true,
+  "explorer.previewAction.onHover": false,
+  "explorer.icon.enableVimDevicons": true,
+  "explorer.file.showHiddenFiles": false,
+  "explorer.position": "right",
 
-    "java.configuration.runtimes": [
-        {
-            "name": "JavaSE-11",
-            "path": "/usr/lib/jvm/java-11-openjdk",
-            "default": true
-        },
-        {
-            "name": "JavaSE-1.8",
-            "path": "/usr/lib/jvm/java-8-openjdk"
-        }
-    ],
+  "codeLens.enable": true,
+  "java.referencesCodeLens.enabled": true,
+  "java.signatureHelp.enabled": true,
 
-    "languageserver": {
-        "go": {
-            "command": "gopls",
-            "rootPatterns": [
-                "go.mod"
-            ],
-            "trace.server": "verbose",
-            "filetypes": [
-                "go"
-            ]
-        },
-        "ccls": {
-            "command": "ccls",
-            "filetypes": [
-                "c",
-                "cc",
-                "cpp",
-                "c++",
-                "objc",
-                "objcpp"
-            ],
-            "rootPatterns": [
-                ".ccls",
-                "compile_commands.json",
-                ".git/",
-                ".hg/"
-            ],
-            "initializationOptions": {
-                "cache": {
-                    "directory": "/tmp/ccls"
-                }
-            }
-        }
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-11",
+      "path": "/usr/lib/jvm/java-11-openjdk",
+      "default": true
+    },
+    {
+      "name": "JavaSE-1.8",
+      "path": "/usr/lib/jvm/java-8-openjdk"
     }
+  ],
+  "cSpell.enabledLanguageIds": ["tex"],
+  "cSpell.enabled": true,
+  "cSpell.numSuggestions": 8,
+
+  "languageserver": {
+    "go": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod"],
+      "trace.server": "verbose",
+      "filetypes": ["go"]
+    },
+    "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"],
+      "rootPatterns": [".ccls", "compile_commands.json", ".git/", ".hg/"],
+      "initializationOptions": {
+        "cache": {
+          "directory": "/tmp/ccls"
+        }
+      }
+    }
+  },
+  "cSpell.userWords": [
+    "documentclass"
+  ]
 }

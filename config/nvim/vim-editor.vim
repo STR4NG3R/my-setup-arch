@@ -1,5 +1,6 @@
 set autochdir
 
+"set guicursor
 "Smoothie scroll
 let g:smoothie_no_default_mapings=1
 " let g:smoothie_experimental_mappings=1
