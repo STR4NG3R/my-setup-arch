@@ -1,15 +1,17 @@
 set autochdir
-
-"set guicursor
+" set guicursor
+"
 "Smoothie scroll
 let g:smoothie_no_default_mapings=1
-" let g:smoothie_experimental_mappings=1
+
 set noswapfile
+
 if (has("termguicolors"))
  set termguicolors
 endif
 
-"Configuration for coc-explorer
+" Running Stuff
+nnoremap <F9> :QuickRun<CR>
 nmap <F5> :CocCommand clangd.switchSourceHeader<CR>
  
 " Use preset argument to open it
@@ -38,7 +40,7 @@ set shiftwidth=2
 set tabstop=2
 set softtabstop=0
 set expandtab
-"" Map leader to ,
+set cmdheight=1
 "" Searching set hlsearch set incsearch set ignorecase
 set smartcase
 
@@ -50,9 +52,6 @@ syntax on
 " Some servers have issues with backup files, see #649.
 set nobackup
 set nowritebackup
-
-" Give more space for displaying messages.
-" set cmdheight=2
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
