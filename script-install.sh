@@ -12,11 +12,6 @@ purpleColour="\e[0;35m\033[1m"
 turquoiseColour="\e[0;36m\033[1m"
 grayColour="\e[0;37m\033[1m"
 
-if [ "$(id -u)" != 0 ]; then
-        echo -e "${redColour}You are not admin user! Run as admin ${endColour}"
-        exit
-fi
-
 echo -e "${greenColour}Installation Begin...${endColour}"
 echo $PATH_DIR
 echo $USER_HOME
@@ -25,7 +20,7 @@ echo $USER_HOME
 sudo pacman -Syu --noconfirm
 
 echo -e "${yellowColour}Installing packages... ${endColour}"
-pacman -S --noconfirm git
+sudo pacman -S --noconfirm git
 
 git clone https://aur.archlinux.org/trizen-git.git
 cd "$PATH_DIR/trizen-git"
@@ -34,24 +29,21 @@ makepkg -si
 trizen -S --noedit --noconfirm zsh  \
 python git gvfs gvfs-mtp \
 gzip alacritty-ligatures adobe-source-code-pro-fonts \
-adobe-source-han-sans-otc-fonts openssh npm \
-networkmanager yarn \
-nodejs htop polkit tlp \
-tmux ufw udiskie udisks2 \
+openssh npm networkmanager yarn \
+nodejs htop tlp tmux ufw  udisks2 \
 pulseaudio noto-fonts noto-fonts-cjk ttf-font-awesome \
 neofetcht tf-nerd-fonts-symbols xclip powerline-fonts \
 python-psutil pip wget playerctl neovim-git \
-crda  ranger ueberzug atool \
-ccls opendoas-sudo mupdf bat
+crda  ranger ueberzug atool opendoas-sudo ripgrep
 
 echo "${turquoiseColour}Would You like install GUI? y/n"
 read -p "" opt
 case $opt in 
     [yY]* )
         trizen -S --noedit --noconfirm xorg xfce4-taskmanager adapta-gtk-theme \
-        pavucontrol firefox polkit-gnome redshift vlc lxappearance rofi \
+        pavucontrol polkit firefox polkit-gnome redshift vlc lxappearance rofi \
         flameshot lightdm lightdm-gtk-greeter thunar thunar-archive-plugin \
-        dunst ristretto picom-jonaburg-git blight
+        dunst ristretto picom-jonaburg-git blight udiskie mupdf bat zathura
 
         echo "Choose your WM Setup${redColour}"
         echo "1.- [q]tile"
@@ -92,10 +84,11 @@ echo "${turquoiseColour}All common packages and config files have been installed
 pip install --user neovim
 pip install --user jedi
 
-systemctl enable lightdm
-systemctl enable NetworkManager
-systemctl enable ufw
-systemctl enable tlp
+sudo systemctl enable lightdm
+sudo systemctl enable NetworkManager
+sudo systemctl enable ufw
+sudo systemctl enable tlp
+sudo systemctl enable bluetooth.service
 
 mkdir -p /etc/X11/xorg.conf.d && sudo tee <<'EOF' /etc/X11/xorg.conf.d/90-touchpad.conf 1> /dev/null
 Section "InputClass"
