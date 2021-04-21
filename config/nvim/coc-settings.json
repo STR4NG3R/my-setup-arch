@@ -1,6 +1,7 @@
 {
   "coc.preferences.snippets.enable": true,
   "coc.preferences.extensionUpdateCheck": "never",
+
   "coc.preferences.formatOnSaveFiletypes": [
     "css",
     "markdown",
@@ -12,10 +13,13 @@
     "json"
   ],
 
+  "cSpell.enabled":true,
   "cSpellExt.enableDictionaries": ["spanish", "english"],
+  "cSpell.showCommandsInEditorContextMenu": true,
   "cSpell.language": "en,es",
+  "cSpell.enabledLanguageIds": ["tex"],
+  "cSpell.numSuggestions": 8,
 
-  /* "suggest.disableMenu": true, */
   "explorer.width": 30,
   "explorer.file.root.template": "[icon] [git] [hidden & 1][root]",
   "explorer.icon.enableNerdfont": true,
@@ -39,9 +43,6 @@
       "path": "/usr/lib/jvm/java-8-openjdk"
     }
   ],
-  "cSpell.enabledLanguageIds": ["tex"],
-  "cSpell.enabled": true,
-  "cSpell.numSuggestions": 8,
 
   "emmet.includeLanguages": {
     "vue-html": "html",
@@ -55,6 +56,17 @@
       "filetypes": ["go"]
     }
   },
-  "eslint.autoFixOnSave": false,
-  "cSpell.userWords": ["documentclass"]
+  /* "eslint.autoFixOnSave": false, */
+  "cSpell.userWords": [
+    "amet",
+    "documentclass",
+    "hyperref",
+    "hypersetup",
+    "inputenc",
+    "linkcolor",
+    "maketitle",
+    "titlepage",
+    "urlcolor",
+    "usepackage"
+  ]
 }

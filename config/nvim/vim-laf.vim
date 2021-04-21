@@ -8,10 +8,15 @@
 " let g:syntastic_aggregate_errors = 1
 
 "laf
-set background=dark
-colorscheme palenight
- set guifont=CaskaydiaCove\ Nerd\ Font\ Mono:h12
+" set background=dark
+colorscheme tokyonight
+set guifont=CaskaydiaCove\ Nerd\ Font\ Mono:h12
+let g:tokyonight_style = "storm"
+let g:tokyonight_italic_functions = 1
 
+let g:dashboard_default_executive ='fzf'
+let g:tokyonight_style = "storm"
+let g:tokyonight_italic_functions = 1
 "*****************************************************************************
 "" Visual Settings
 "*****************************************************************************

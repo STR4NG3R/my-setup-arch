@@ -43,7 +43,8 @@ case $opt in
         trizen -S --noedit --noconfirm xorg xfce4-taskmanager adapta-gtk-theme \
         pavucontrol polkit firefox polkit-gnome redshift vlc lxappearance rofi \
         flameshot lightdm lightdm-gtk-greeter thunar thunar-archive-plugin \
-        dunst ristretto picom-jonaburg-git blight udiskie mupdf bat zathura
+        dunst ristretto picom-jonaburg-git blight udiskie mupdf bat zathura \
+        zathura-pdf-mupdf
 
         echo "Choose your WM Setup${redColour}"
         echo "1.- [q]tile"

@@ -3,44 +3,42 @@ call plug#begin(expand('~/.config/nvim/plugged'))
 Plug 'sheerun/vim-polyglot'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'honza/vim-snippets'
+Plug 'FooSoft/vim-argwrap'
 Plug 'norcalli/nvim-colorizer.lua'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Themes, Icons, Color Schemes
-Plug 'tomasiser/vim-code-dark'
 Plug 'drewtempelmeyer/palenight.vim'
+Plug 'folke/tokyonight.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'ryanoasis/vim-devicons'
-Plug 'Raimondi/delimitMate'
 Plug 'kevinhwang91/rnvimr', {'do': 'make sync'}
-Plug 'glepnir/galaxyline.nvim' , {'branch': 'main'}
+Plug 'hoob3rt/lualine.nvim'
 Plug 'romgrk/barbar.nvim'
-"Web Development
-Plug 'alvan/vim-closetag'
-Plug 'AndrewRadev/tagalong.vim'
 "Debug tools
 Plug 'thinca/vim-quickrun'
 Plug 'puremourning/vimspector'
-Plug 'FooSoft/vim-argwrap'
-"CoC Plugins
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'antoinemadec/coc-fzf', {'branch': 'release'}
-" Latex Plugins
+"Latex Plugins
 Plug 'lervag/vimtex'
 Plug 'donRaphaco/neotex', { 'for': 'tex' }
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 "General Plugins
+Plug 'windwp/nvim-ts-autotag'
 Plug 'lukas-reineke/indent-blankline.nvim', {'branch': 'lua'}
-Plug 'RRethy/vim-illuminate'
 Plug 'tpope/vim-surround'
 Plug 'metakirby5/codi.vim'
 Plug 'psliwka/vim-smoothie'
-Plug 'mhinz/vim-startify'
-Plug 'tpope/vim-commentary'
 Plug 'lambdalisue/suda.vim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
 Plug 'junegunn/fzf.vim' " needed for previews
+Plug 'antoinemadec/coc-fzf', {'branch': 'release'}
 Plug 'voldikss/vim-floaterm'
 Plug 'tpope/vim-fugitive'
+Plug 'glepnir/dashboard-nvim'
+Plug 'b3nj5m1n/kommentary'
 Plug 'airblade/vim-gitgutter'
+" Plug 'sunjon/shade.nvim'
+Plug 'dstein64/vim-startuptime'
 call plug#end()
 
 let g:coc_global_extensions = [
@@ -67,34 +65,34 @@ let g:coc_global_extensions = [
       \'coc-xml',
       \'coc-phpls',
       \'coc-emmet',
+      \'coc-markdownlint',
+      \'coc-pairs',
       \]
 
 if !has('nvim')
     set viminfo+=~/.vim/viminfo
 endif
 
-set spell spelllang=es,en 
-" autocmd BufEnter *.*  set nospell
-" autocmd BufEnter *.tex  set spell
-
-
 source $HOME/.config/nvim/vim-editor.vim 
 source $HOME/.config/nvim/vim-mappings.vim
 source $HOME/.config/nvim/vim-quickrun.vim
 source $HOME/.config/nvim/vim-clip.vim  
-source $HOME/.config/nvim/vim-startify.vim 
 source $HOME/.config/nvim/vim-laf.vim
 source $HOME/.config/nvim/vim-terminal.vim
 source $HOME/.config/nvim/fzf.vim
 source $HOME/.config/nvim/rn.vim
-source $HOME/.config/nvim/vim-html.vim
 source $HOME/.config/nvim/vim-snippets.vim
 source $HOME/.config/nvim/git-gutter.vim
 source $HOME/.config/nvim/vim-barbar.vim
+source $HOME/.config/nvim/dashboard.vim
 luafile $HOME/.config/nvim/vim-lua.lua
-luafile $HOME/.config/nvim/vim-lua-status.lua
+luafile $HOME/.config/nvim/status.lua
 luafile $HOME/.config/nvim/ident_line.lua
+" luafile $HOME/.config/nvim/shade.lua
 
 let g:suda_smart_edit = 1
 nnoremap <silent> <leader>ag :ArgWrap<CR>
-autocmd FileType javascript.jsx setlocal commentstring={/*\ %s\ */}
+autocmd FileType *.html let b:coc_pairs_diabled = ['<']
+autocmd FileType *.jsx let b:coc_pairs_diabled = ['<']
+
+let g:tokyonight_sidebars = [ "quickfix", "__vista__", "terminal" ]

@@ -14,12 +14,11 @@ nnoremap <leader>v :e ~/.config/nvim/init.vim<CR>
 map <C-a> <esc>ggVG<CR>
 
 map <Leader>c :bp \| bd! # <CR>
-"map <Leader>c :bd! <CR>
-map <silent>    <S-Tab> :bNext<CR>
-map <silent>    <Tab> :bnext<CR>
+map <silent> <S-Tab> :bNext<CR>
+map <silent> <Tab> :bnext<CR>
 map <Leader>w :bw <CR>
-map <Leader>s :vsp <CR>
-map <Leader>v :sp <CR>
+" map <Leader>v :vsp <CR>
+" map <Leader>| :sp <CR>
 
 "" Switching windows
 noremap <nowait><C-j> <C-w>j<CR> 
@@ -73,9 +72,6 @@ endif
 " Better nav for omnicomplete
 " inoremap <expr> <c-j> ("\<C-n>")
 " inoremap <expr> <c-k> ("\<C-p>")
-
-" Insert commentary
-map <Leader>7 :Commentary <CR>
 
 " Git config files
 nnoremap gps :Gpush

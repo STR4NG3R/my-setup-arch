@@ -1,4 +1,7 @@
 require "nvim-treesitter.configs".setup {
+  autotag = {
+    enable = true
+  },
   playground = {
     enable = true,
     disable = {},
@@ -23,5 +26,5 @@ hsl_fn   = true;        -- CSS hsl() and hsla() functions
 css      = true;        -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
 css_fn   = true;        -- Enable all CSS *functions*: rgb_fn, hsl_fn
 -- Available modes: foreground, background
-mode     = 'background'; -- Set the display mode.
+mode     = 'foreground'; -- Set the display mode.
 }
