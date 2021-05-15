@@ -1,10 +1,14 @@
 {
   "coc.preferences.snippets.enable": true,
   "coc.preferences.extensionUpdateCheck": "never",
+  "diagnostic.virtualText": true,
+  "diagnostic.virtualTextCurrentLineOnly": true,
 
   "coc.preferences.formatOnSaveFiletypes": [
     "css",
     "markdown",
+    "py",
+    "python",
     "Markdown",
     "javascript",
     "javascriptreact",
@@ -13,19 +17,18 @@
     "json"
   ],
 
-  "cSpell.enabled":true,
+  "cSpell.enabled": true,
   "cSpellExt.enableDictionaries": ["spanish", "english"],
   "cSpell.showCommandsInEditorContextMenu": true,
   "cSpell.language": "en,es",
   "cSpell.enabledLanguageIds": ["tex"],
   "cSpell.numSuggestions": 8,
 
+  "explorer.icon.enableVimDevicons": true,
   "explorer.width": 30,
   "explorer.file.root.template": "[icon] [git] [hidden & 1][root]",
   "explorer.icon.enableNerdfont": true,
   "explorer.previewAction.onHover": false,
-  "explorer.icon.enableVimDevicons": true,
-  "explorer.file.showHiddenFiles": false,
   "explorer.position": "right",
 
   "codeLens.enable": true,

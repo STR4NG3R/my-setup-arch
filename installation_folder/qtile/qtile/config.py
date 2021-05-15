@@ -17,6 +17,7 @@ BLUE = "#007fdf"
 DARK_BLUE = "#002a4a"
 ORANGE = "#dd6600"
 DARK_ORANGE = "#371900"
+RED = "#ff0000"
 
 
 def window_to_previous_screen(qtile):
@@ -52,9 +53,9 @@ keys = [
     Key([mod], "Escape", lazy.spawn('xkill')),
     Key(["mod1"], "p", lazy.spawn('xprop')),
     Key([mod], "Return", lazy.spawn('alacritty')),
-    Key([mod], "space",
-        lazy.spawn(home + '/.config/rofi/launchers/misc/launcher.sh')),
-    # Key([mod], "space",lazy.spawn("rofi -modi drun -show drun -show-icons")),
+    # Key([mod], "space",
+    #     lazy.spawn(home + '/.config/rofi/launchers/misc/launcher.sh')),
+    Key([mod], "space", lazy.spawn("rofi -modi drun -show drun -show-icons")),
     Key([mod], "c", lazy.spawn('alacritty  -e cmus')),
     # SUPER + SHIFT KEYS
     Key([mod, "shift"], "Return", lazy.spawn('thunar')),
@@ -148,23 +149,15 @@ for i in groups:
             )
     ])
 
-# COLORS FOR THE BAR
-colors = {
-    "dark":  ["#282a36"],
-    "grey":  ["#434758"],
-    "white": ["#ffffff"],
-    "pink":  ["#A77AC4"],
-    "blue":  ["#7197E7"],
-    "red":   ["#FF0000"]
-}
-
 
 def init_layout_theme():
     return {
-        "margin": 3,
+        "margin": 0,
         "border_width": 2,
-        "border_focus": "#A77AC4",
-        "border_normal": "#7197E7"
+        "border_focus": BLUE,
+        #        "border_normal": DARK_BLUE
+        "border_normal": GREY
+
     }
 
 
@@ -179,15 +172,16 @@ def color_separator(background, foreground):
         text="",
         padding=-4,
         fontsize=34,
-        background=colors[background],
-        foreground=colors[foreground]
+        background=background,
+        foreground=foreground
     )
 
 
 def init_widgets_list():
     bar = [
         widget.GroupBox(
-            font="Ubuntu Bold", fontsize=12, padding=4, borderwidth=1,
+            font="Ubuntu Nerd Font Mono Regula", fontsize=18,
+            padding=4, borderwidth=1,
             urgent_border=DARK_BLUE,
             disable_drag=True, highlight_method="block",
             this_screen_border=DARK_BLUE, other_screen_border=DARK_ORANGE,
@@ -319,6 +313,11 @@ floating_layout = layout.Floating(float_rules=[
 ],  fullscreen_border_width=0, border_width=0)
 auto_fullscreen = True
 focus_on_window_activation = "smart"  # smart or focus
+widget_defaults = {
+    "font": "Ubuntu Nerd Font Mono Regular",
+    "fontsize": 12,
+    "padding": 2,
+}
 wmname = "LG3D"
 
 

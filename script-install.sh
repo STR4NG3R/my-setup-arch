@@ -27,14 +27,15 @@ cd "$PATH_DIR/trizen-git"
 makepkg -si
 
 trizen -S --noedit --noconfirm zsh  \
-python git gvfs gvfs-mtp \
-gzip alacritty-ligatures adobe-source-code-pro-fonts \
-openssh npm networkmanager yarn \
-nodejs htop tlp tmux ufw  udisks2 \
+python gvfs gvfs-mtp \
+gzip alacritty-ligatures \
+networkmanager \
+htop tlp tmux ufw  udisks2 \
 pulseaudio noto-fonts noto-fonts-cjk ttf-font-awesome \
 neofetcht tf-nerd-fonts-symbols xclip powerline-fonts \
 python-psutil pip wget playerctl neovim-git \
-crda  ranger ueberzug atool opendoas-sudo ripgrep
+crda  ranger ueberzug atool ripgrep \
+uctags-git nodejs-lts-fermiu yarn
 
 echo "${turquoiseColour}Would You like install GUI? y/n"
 read -p "" opt
@@ -65,7 +66,8 @@ esac
 
 
 git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
-
+git clone https://github.com/wbthomason/packer.nvim\
+ ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
 echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc
 
