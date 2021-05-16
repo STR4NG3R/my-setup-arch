@@ -34,7 +34,7 @@ pulseaudio noto-fonts noto-fonts-cjk ttf-font-awesome \
 neofetcht tf-nerd-fonts-symbols xclip powerline-fonts \
 python-psutil pip wget playerctl neovim-git \
 crda  ranger ueberzug atool ripgrep \
-uctags-git nodejs-lts-fermiu yarn cmus
+uctags-git nodejs-lts-fermiu yarn cmus jq
 
 read -p "${turquoiseColour}Would You like install GUI? y/n " opt
 case $opt in 
