@@ -9,6 +9,7 @@ require('nvim_gitsigns')
 require('nvim_treesitter')
 require('nvim_neoscroll')
 require('nvim_rnvimr')
+require('nvim_kommentary')
 --require('nvim_indent_line')
 require('nvim_status')
 

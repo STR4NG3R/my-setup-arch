@@ -38,11 +38,13 @@ return require("packer").startup(
     -- TODO refactor all of this (for now it works, but yes I know it could be wrapped in a simpler function)
 
     use {
-  'lewis6991/gitsigns.nvim',
-  requires = {
-    'nvim-lua/plenary.nvim'
-  }
-}
+      'lewis6991/gitsigns.nvim',
+      requires = {
+        'nvim-lua/plenary.nvim'
+      }
+    }
+    use 'b3nj5m1n/kommentary'
+    use 'JoosepAlviste/nvim-ts-context-commentstring'
     use "ryanoasis/vim-devicons"
     use "voldikss/vim-floaterm"    
     use "karb94/neoscroll.nvim"
@@ -95,6 +97,9 @@ return require("packer").startup(
     use "tpope/vim-surround"
     use "tpope/vim-dotenv"
     use "kristijanhusak/vim-dadbod-ui"
+
+
+
   end
 )
 

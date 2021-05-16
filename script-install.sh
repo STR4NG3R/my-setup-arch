@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# #!/usr/bin/env bash
 
 PATH_DIR=$(dirname $(readlink -f "$0"))
 USER_HOME=$(eval echo ~${SUDO_USER})
@@ -29,19 +29,17 @@ makepkg -si
 trizen -S --noedit --noconfirm zsh  \
 python gvfs gvfs-mtp \
 gzip alacritty-ligatures \
-networkmanager \
-htop tlp tmux ufw  udisks2 \
+networkmanager bashtop tlp tmux ufw  udisks2 \
 pulseaudio noto-fonts noto-fonts-cjk ttf-font-awesome \
 neofetcht tf-nerd-fonts-symbols xclip powerline-fonts \
 python-psutil pip wget playerctl neovim-git \
 crda  ranger ueberzug atool ripgrep \
-uctags-git nodejs-lts-fermiu yarn
+uctags-git nodejs-lts-fermiu yarn cmus
 
-echo "${turquoiseColour}Would You like install GUI? y/n"
-read -p "" opt
+read -p "${turquoiseColour}Would You like install GUI? y/n " opt
 case $opt in 
     [yY]* )
-        trizen -S --noedit --noconfirm xorg xfce4-taskmanager adapta-gtk-theme \
+        trizen -S --noedit --noconfirm xfce4-taskmanager adapta-gtk-theme \
         pavucontrol polkit firefox polkit-gnome redshift vlc lxappearance rofi \
         flameshot lightdm lightdm-gtk-greeter thunar thunar-archive-plugin \
         dunst ristretto picom-jonaburg-git blight udiskie mupdf bat zathura \
@@ -50,7 +48,6 @@ case $opt in
         echo "Choose your WM Setup${redColour}"
         echo "1.- [q]tile"
         echo "2.- [i]3${endColour}"
-
         read -p "" opt
         case $opt in
             [qQ]* ) 
@@ -62,6 +59,7 @@ case $opt in
                 install_i3 $PATH_DIR $USER_HOME
                 echo "${greenColour}Installation Succesful";;
         esac
+    ;;
 esac
 
 
@@ -72,7 +70,7 @@ git clone https://github.com/wbthomason/packer.nvim\
 echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc
 
 echo "${yellowColour}Installing Common Packages${endColour}"
-cp -R "$PATH_DIR/config/" "$USER_HOME/.config/"
+cp -Rf "$PATH_DIR/config/*" "$USER_HOME/.config/"
 cp "$PATH_DIR/.tmux.conf" "$USER_HOME/"
 cp "$PATH_DIR/.zshrc" "$USER_HOME/"
 cp "$PATH_DIR/.bashrc" "$USER_HOME/"
