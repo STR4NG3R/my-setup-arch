@@ -40,9 +40,9 @@ read -p "${turquoiseColour}Would You like install GUI? y/n " opt
 case $opt in 
     [yY]* )
         trizen -S --noedit xfce4-taskmanager adapta-gtk-theme \
-        pavucontrol polkit polkit-gnome redshift vlc lxappearance rofi \
+        pavucontrol polkit polkit-gnome redshift lxappearance rofi \
         flameshot lightdm lightdm-gtk-greeter thunar thunar-archive-plugin \
-        dunst ristretto picom-jonaburg-git blight udiskie mupdf bat zathura \
+        dunst feh picom-jonaburg-git blight udiskie mupdf bat zathura \
         zathura-pdf-mupdf
 
         echo "Choose your WM Setup${redColour}"
