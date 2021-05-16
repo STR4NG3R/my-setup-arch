@@ -26,8 +26,8 @@ git clone https://aur.archlinux.org/trizen-git.git
 cd "$PATH_DIR/trizen-git"
 makepkg -si
 
-trizen -S --noedit --noconfirm zsh  \
-python gvfs gvfs-mtp \
+trizen -S --noedit \
+zsh python gvfs gvfs-mtp \
 gzip alacritty-ligatures \
 networkmanager bashtop tlp tmux ufw  udisks2 \
 pulseaudio noto-fonts noto-fonts-cjk ttf-font-awesome \
@@ -39,8 +39,8 @@ uctags-git nodejs-lts-fermiu yarn cmus jq
 read -p "${turquoiseColour}Would You like install GUI? y/n " opt
 case $opt in 
     [yY]* )
-        trizen -S --noedit --noconfirm xfce4-taskmanager adapta-gtk-theme \
-        pavucontrol polkit firefox polkit-gnome redshift vlc lxappearance rofi \
+        trizen -S --noedit xfce4-taskmanager adapta-gtk-theme \
+        pavucontrol polkit polkit-gnome redshift vlc lxappearance rofi \
         flameshot lightdm lightdm-gtk-greeter thunar thunar-archive-plugin \
         dunst ristretto picom-jonaburg-git blight udiskie mupdf bat zathura \
         zathura-pdf-mupdf
