@@ -26,16 +26,18 @@ git clone https://aur.archlinux.org/trizen-git.git
 cd "$PATH_DIR/trizen-git"
 makepkg -si
 
+read -p 
 trizen -S --noedit \
 zsh python gvfs gvfs-mtp \
 gzip alacritty-ligatures \
 networkmanager bashtop tlp tmux ufw  udisks2 \
 pulseaudio noto-fonts noto-fonts-cjk ttf-font-awesome \
-neofetcht tf-nerd-fonts-symbols xclip powerline-fonts \
+neofetcht ttf-nerd-fonts-symbols  powerline-fonts \
 python-psutil pip wget playerctl neovim-git \
 crda  ranger ueberzug atool ripgrep \
 uctags-git nodejs-lts-fermiu yarn cmus jq
 
+chsh -s $(which zsh)
 read -p "${turquoiseColour}Would You like install GUI? y/n " opt
 case $opt in 
     [yY]* )
@@ -43,7 +45,8 @@ case $opt in
         pavucontrol polkit polkit-gnome redshift lxappearance rofi \
         flameshot lightdm lightdm-gtk-greeter thunar thunar-archive-plugin \
         dunst feh picom-jonaburg-git blight udiskie mupdf bat zathura \
-        zathura-pdf-mupdf
+        zathura-pdf-mupdfpowerlevel10k qt5ct\
+        xclip nerd-fonts-jetbrains-mono nerd-fonts-ubuntu-mono 
 
         echo "Choose your WM Setup${redColour}"
         echo "1.- [q]tile"
