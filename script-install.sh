@@ -33,9 +33,10 @@ gzip alacritty-ligatures \
 networkmanager bashtop tlp tmux ufw  udisks2 \
 pulseaudio noto-fonts noto-fonts-cjk ttf-font-awesome \
 neofetcht ttf-nerd-fonts-symbols  powerline-fonts \
-python-psutil pip wget playerctl neovim-git \
-crda  ranger ueberzug atool ripgrep \
-uctags-git nodejs-lts-fermiu yarn cmus jq
+python-psutil python-pip wget playerctl neovim-git \
+crda  ranger ueberzug atool ripgrep fzf \
+uctags-git nodejs-lts-fermiu yarn cmus jq gitui oh-my-zsh-git \
+pamixer lsb_release
 
 chsh -s $(which zsh)
 read -p "${turquoiseColour}Would You like install GUI? y/n " opt
@@ -46,7 +47,7 @@ case $opt in
         flameshot lightdm lightdm-gtk-greeter thunar thunar-archive-plugin \
         dunst feh picom-jonaburg-git blight udiskie mupdf bat zathura \
         zathura-pdf-mupdfpowerlevel10k qt5ct\
-        xclip nerd-fonts-jetbrains-mono nerd-fonts-ubuntu-mono 
+        xclip nerd-fonts-jetbrains-mono nerd-fonts-ubuntu-mono nm-connection-editor arandr
 
         echo "Choose your WM Setup${redColour}"
         echo "1.- [q]tile"

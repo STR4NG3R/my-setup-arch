@@ -18,7 +18,7 @@ export QT_QPA_PLATFORMTHEME="qt5ct"
 # ZSH_THEME="agnoster"
 plugins=(git)
 
-source $ZSH/oh-my-zsh.sh
+# source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions
  if [[ -n $SSH_CONNECTION ]]; then

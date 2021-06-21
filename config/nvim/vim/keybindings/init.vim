@@ -1,5 +1,6 @@
 nmap <F5> <Plug>RestNvim<CR>
 nmap <F7> :DBUIToggle<CR>
+nmap <F8> :NvimTreeToggle<CR>
 "quit window
 map <silent><nowait><M-q> :q! <CR>
 "write

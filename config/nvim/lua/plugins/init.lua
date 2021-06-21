@@ -32,41 +32,40 @@ vim.cmd "autocmd BufWritePost plugins.lua PackerCompile" -- Auto compile when th
 
 return require("packer").startup(
   function(use)
-    -- Packer can manage itself as an optional plugin
+    use 'kristijanhusak/vim-dadbod-completion'
     use "wbthomason/packer.nvim"
-
-    -- TODO refactor all of this (for now it works, but yes I know it could be wrapped in a simpler function)
-
+    use "neovim/nvim-lspconfig"
+    use "glepnir/lspsaga.nvim"
+    use "kabouzeid/nvim-lspinstall"
     use {
       'lewis6991/gitsigns.nvim',
       requires = {
         'nvim-lua/plenary.nvim'
       }
     }
-    use 'b3nj5m1n/kommentary'
+    use 'tpope/vim-commentary'
     use 'JoosepAlviste/nvim-ts-context-commentstring'
-    use "ryanoasis/vim-devicons"
-    use "voldikss/vim-floaterm"    
-    use "karb94/neoscroll.nvim"
-    use {
-      'NTBBloodbath/rest.nvim',
-      requires = { 'nvim-lua/plenary.nvim' }
-    }
+    use 'voldikss/vim-floaterm'
+    use 'karb94/neoscroll.nvim'
+    use 'NTBBloodbath/rest.nvim'
     -- Debugging
     use "mfussenegger/nvim-dap"
     -- Autocomplete
-    use {"neoclide/coc.nvim", branch= "release"}
+    use "nvim-lua/popup.nvim"
+    use "nvim-telescope/telescope.nvim"
+    use "nvim-telescope/telescope-fzy-native.nvim"
+    use "hrsh7th/nvim-compe"
     use "hrsh7th/vim-vsnip"
+    use 'hrsh7th/vim-vsnip-integ'
     use "rafamadriz/friendly-snippets"
 
     -- Treesitter
     use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
     use "windwp/nvim-ts-autotag"
-    use {'junegunn/fzf', dir = '~/.fzf', run = './install --all' }
-    use {"junegunn/fzf.vim"}
-    use {"antoinemadec/coc-fzf", branch =  "release"}
-
-    -- Explorer
+    use 'stevearc/vim-arduino'
+    use {'edluffy/specs.nvim'}
+    -- Explorer-
+    use "kyazdani42/nvim-tree.lua"
     use "sindrets/diffview.nvim"
     use "kevinhwang91/rnvimr"
 
@@ -75,9 +74,9 @@ return require("packer").startup(
     --use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
     use "folke/which-key.nvim"
     use "windwp/nvim-autopairs"
+    use "moll/vim-node"
     use "kevinhwang91/nvim-bqf"
     use "glepnir/dashboard-nvim"
-    use "terrortylor/nvim-comment" 
 
     -- Color
     use "drewtempelmeyer/palenight.vim"
@@ -89,7 +88,6 @@ return require("packer").startup(
 
     use "hoob3rt/lualine.nvim"
     use "metakirby5/codi.vim"
-    use "lervag/vimtex"
     use {"donRaphaco/neotex", ft = "tex" }
     use {"iamcco/markdown-preview.nvim",  run = "cd app && yarn install"  }
     use "lambdalisue/suda.vim"
@@ -98,8 +96,5 @@ return require("packer").startup(
     use "tpope/vim-dotenv"
     use "kristijanhusak/vim-dadbod-ui"
 
-
-
   end
 )
-

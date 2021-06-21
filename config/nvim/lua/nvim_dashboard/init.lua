@@ -8,7 +8,7 @@ vim.g.dashboard_custom_header = {
 }
 
 
-vim.g.dashboard_default_executive = 'fzf'
+vim.g.dashboard_default_executive = 'telescope'
 
 --[[vim.g.dashboard_custom_section = {
     a = {description = {'  Find File          '}, command = 'Telescope find_files'},
@@ -18,6 +18,6 @@ vim.g.dashboard_default_executive = 'fzf'
     e = {description = {'  Settings           '}, command = ':e ~/.config/nvim/lv-settings.lua'}
 }]]--
 
--- vim.g.dashboard_session_directory = '~/.cache/nvim/session'
+vim.g.dashboard_session_directory = '~/.cache/nvim/session'
 vim.g.dashboard_custom_footer = {'Never Think Stop Never Stop Think'}
 vim.api.nvim_command('nnoremap <F6> :Dashboard<CR>')

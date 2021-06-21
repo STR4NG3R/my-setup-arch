@@ -8,7 +8,7 @@ require "nvim-treesitter.configs".setup {
   },
   playground = {enable = true},
   indent = {enable = true},
-  context_commentstring = {enable = true},
+  context_commentstring = {enable = true, enable_autocmd=false},
   rainbow = {enable = true}
 }
 
@@ -25,4 +25,5 @@ css_fn   = true;        -- Enable all CSS *functions*: rgb_fn, hsl_fn
 -- Available modes: foreground, background
 mode     = 'foreground'; -- Set the display mode.
 }
+
 
