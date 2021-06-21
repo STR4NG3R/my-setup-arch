@@ -26,7 +26,6 @@ git clone https://aur.archlinux.org/trizen-git.git
 cd "$PATH_DIR/trizen-git"
 makepkg -si
 
-read -p 
 trizen -S --noedit \
 zsh python gvfs gvfs-mtp \
 gzip alacritty-ligatures \
