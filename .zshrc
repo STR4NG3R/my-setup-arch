@@ -6,19 +6,25 @@
 # tmux attach -t development
 # clear
 
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-export TERM=alacritty
-export ZSH="$HOME/.oh-my-zsh"
-export ANDROID_HOME="$HOME/Android/Sdk"
-export QT_QPA_PLATFORMTHEME="qt5ct"
 
-# ZSH_THEME="agnoster"
-plugins=(git)
-
-# source $ZSH/oh-my-zsh.sh
+plugins=(
+  git
+  history
+  tmux
+  systemd
+  sudo
+  fzf
+  gcloud
+  compleat
+  zsh-interactive-cd
+)
 
 # Preferred editor for local and remote sessions
  if [[ -n $SSH_CONNECTION ]]; then
@@ -27,14 +33,13 @@ plugins=(git)
    export EDITOR='nvim'
  fi
 
-source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
+export PATH=$PATH:/opt/texlive/bin:/home/str4ng3r/.local/bin:~/.config/scripts:${HOME}/.config/rofi/bin
+export ZSH="$HOME/.oh-my-zsh"
+export ANDROID_HOME="$HOME/Android/Sdk"
+export QT_QPA_PLATFORMTHEME="qt5ct"
 export JAVA_HOME=/usr/lib/jvm/default
 export JDK_HOME=$JAVA_HOME
-export PATH=$HOME/.config/rofi/bin:$PATH
+export SSHFS=~/Documents/SSHFS
 
 #if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
 #    tmux attach -t default || tmux new -s default
@@ -73,6 +78,31 @@ function codi() {
      Codi $syntax" "$@"
 }
 
+function connect_remote_server {
+  ssh -i ~/.ssh/credentials/${1}/${2} ${3}
+}
+
+function download_mp3 {
+  regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+  link=$(xclip -o)
+  if [[ $link =~ $regex ]]
+  then 
+    notify-send "Starting Download ${link}"
+    cwd=$(pwd)
+    cd $HOME/Music/
+    youtube-dl -x --embed-thumbnail --audio-format mp3 $link
+    notify-send "Downloaded"
+    notify-send 
+    cd $cwd
+else 
+  notify-send "Invalid Link"
+  fi
+}
+
+function sshfs_withkeys() {
+  sshfs ${1}@${2}:/ ${HOME}/Documents/SSHFS/  -i ${3} 
+}
+
 alias ls='ls --color=auto'
 alias install='trizen -S --noedit'
 alias remove='trizen -R --noedit'
@@ -83,12 +113,15 @@ alias list_update='trizen -Qu'
 alias clean_cache='trizen -Scc --noedit'
 alias search='trizen -Ss'
 alias trizenskip='trizen -S --skipinteg --noedit'
-alias download_mp3='youtube-dl -x --embed-thumbnail --audio-format mp3'
 alias df='df -hT'
 alias free='free -h'
 alias gen_dep_pip='pip freeze > requierements.txt '
 alias gnvim='gnvim --disable-ext-tabline'
 alias ctags='uctags'
+alias myip='curl ifconfig.me'
+alias music='tmux new-session -s music "tmux source-file ~/.config/ncmpcpp/tsession"'
+alias update-grub='grub-mkconfig -o /boot/grub/grub.cfg'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-export PATH=$PATH:/opt/texlive/bin
+source $ZSH/oh-my-zsh.sh
+source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
