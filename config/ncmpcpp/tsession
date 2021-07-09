@@ -1,0 +1,34 @@
+neww
+set -g status off
+
+#image pane; run cover script, disable text output and remove prompt
+send-keys "bash" C-m #Ensure using bash
+send-keys "stty -echo" C-m
+send-keys "tput civis -- invisible" C-m
+send-keys "export PS1=''" C-m #for bash
+# send-keys "PROMPT='' RPROMPT='' zsh -df" C-m # for p10k
+send-keys "clear" C-m
+send-keys "~/.config/ncmpcpp/cover.sh &> /dev/null" C-m
+
+#catalog pane; run instance of ncmpcpp
+split-window -v
+select-pane -t 1
+send-keys "ncmpcpp --config='~/.config/ncmpcpp/config'" C-m
+send-keys 1
+
+#visualizer pane; run instance of ncmpcpp in visualizer mode
+select-pane -t 0
+split-window -h
+send-keys "ncmpcpp --config='~/.config/ncmpcpp/visualation'" C-m
+send-keys 8
+send-keys u
+
+#resize image and visualizer pane to fit image
+resize-pane -t 0 -x 32 -y 9
+resize-pane -t 1 -y 9
+
+#hook for keeping the image pane size constant
+set-hook client-resized 'resize-pane -t 0 -x 32 -y 9'
+
+#focus on catalog pane
+select-pane -t 2

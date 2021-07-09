@@ -1,0 +1,17 @@
+
+progressbar_look = "   "
+visualizer_type = "ellipse"
+playlist_display_mode = classic
+browser_display_mode = columns
+startup_screen = "visualizer"
+header_visibility = no
+statusbar_visibility = no
+titles_visibility = no
+header_text_scrolling = no
+
+audio_output {
+       type            "fifo"
+       name            "Visualizer feed"
+       path            "/tmp/mpd.fifo"
+       format          "44100:16:2"
+}
