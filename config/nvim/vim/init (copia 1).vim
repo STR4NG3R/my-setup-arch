@@ -16,12 +16,17 @@ set nowritebackup
 set updatetime=750
 set shortmess+=c
 set ve+=onemore
+set autoindent
+set smartindent
 
 inoremap <silent><expr> <C-Space> compe#complete()
 inoremap <silent><expr> <CR>      compe#confirm('<CR>')
 inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
 inoremap <silent><expr> <C-b>     compe#scroll({ 'delta': -4 })
+
+nnoremap <Tab> :BufferNext! <CR>
+nnoremap <S-Tab> :BufferPrevious! <CR>
 
 " let g:compe.source.vim_dadbod_completion = v:true
 let g:vim_dadbod_completion_mark = ''
