@@ -20,10 +20,10 @@ echo $USER_HOME
 sudo pacman -Syu --noconfirm
 
 echo -e "${yellowColour}Installing packages... ${endColour}"
-sudo pacman -S --noconfirm git
+sudo pacman -S --noconfirm git base-devel
 
-git clone https://aur.archlinux.org/trizen-git.git
-cd "$PATH_DIR/trizen-git"
+git clone https://aur.archlinux.org/yay-bin.git
+cd "$PATH_DIR/yay-bin"
 makepkg -si
 
 trizen -S --noedit \
