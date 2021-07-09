@@ -16,11 +16,18 @@ bindsym Caps_Lock exec "~/.config/scripts/keylock.sh caps"
 bindsym Num_Lock exec "~/.config/scripts/keylock.sh num"
 
 # start program launcher
-bindsym $mod+space exec --no-startup-id "rofi -modi drun -show drun -show-icons"
+bindsym $mod+space exec --no-startup-id "$HOME/.config/rofi/launchers/ribbon/launcher.sh"
 bindsym $mod+b exec --no-startup-id "rofi -show window -show-icons"
+bindsym $mod+Shift+x exec --no-startup-id "$HOME/.config/rofi/powermenu/powermenu.sh"
+bindsym $mod+5 exec --no-startup-id "$HOME/.config/rofi/applets/applets/mpd.sh"
+bindsym $mod+6 exec --no-startup-id "$HOME/.config/rofi/applets/applets/time.sh"
+bindsym $mod+7 exec --no-startup-id "$HOME/.config/rofi/applets/applets/quicklinks.sh"
+bindsym $mod+8 exec --no-startup-id "$HOME/.config/rofi/applets/applets/apps.sh"
+bindsym $mod+9 exec --no-startup-id "$HOME/.config/rofi/applets/applets/network.sh"
+bindsym $mod+0 exec --no-startup-id "$HOME/.config/scripts/youtube_download.sh"
 
 # Start at boot
-exec --no-startup-id "~/.config/scripts/autostart.sh i3"
+exec --no-startup-id ~/.config/scripts/autostart.sh i3
 
 # Screen brightness controls
 bindsym XF86MonBrightnessUp exec "light -A 5"
@@ -182,9 +189,6 @@ bindsym $mod+Ctrl+h resize shrink width 4 px or 4 ppt
 bindsym $mod+Ctrl+j resize grow height 4 px or 4 ppt
 bindsym $mod+Ctrl+k resize shrink height 4 px or 4 ppt
 bindsym $mod+Ctrl+l resize grow width 4 px or 4 ppt
-
-# Lock screen
-bindsym $mod+9 exec --no-startup-id blurlock
 
 # Autostart applications
 exec --no-startup-id bash "~/.config/scripts/autostart.sh"
