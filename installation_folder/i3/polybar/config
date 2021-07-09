@@ -49,7 +49,6 @@ volume-max = #bf616a
 ############                         MAINBAR-I3                     ############
 ################################################################################
 ################################################################################
-
 [bar/mainbar-i3]
 ;https://github.com/jaagr/polybar/wiki/Configuration
 monitor = ${env:MONITOR}
@@ -60,14 +59,11 @@ bottom = false
 fixed-center = true
 width = 100%
 height = 20
-
 background = ${colors.background}
 foreground = ${colors.foreground}
-
 radius = 0
 line-size = 2
 line-color = #000000
-
 border-size = 0
 ;border-left-size = 25
 ;border-right-size = 25
@@ -82,14 +78,13 @@ module-margin-right = 2
 
 ;https://github.com/jaagr/polybar/wiki/Fonts
 font-0 = "UbuntuMono Nerd Font:size=10;2"
-font-1 = "UbuntuMono Nerd Font:size=16;3"
-font-2 = "Font Awesome 5 Free:style=Regular:pixelsize=8;1"
-font-3 = "Font Awesome 5 Free:style=Solid:pixelsize=8;1"
-font-4 = "Font Awesome 5 Brands:pixelsize=8;1"
+font-1 = "SourceCodePro-Regular:size=10;2"
+font-2 = "Font Awesome 5 Free:style=Regular:pixelsize=10;1"
+font-3 = "MaterialDesignIcons:pixelsize=10;1"
 
 modules-left = i3 xwindow
 modules-center = 
-modules-right = release backlight-acpi cpu xkeyboard pulseaudio-control pavolume date wireless-network battery module-kernel
+modules-right = backlight-acpi pulseaudio-control cpu date network battery
 ; separator = 
 
 tray-position = right
@@ -206,6 +201,7 @@ animation-charging-framerate = 750
 ################################################################################
 [module/cpu]
 ;https://github.com/jaagr/polybar/wiki/Module:-cpu
+label-padding = 2
 type = internal/cpu
 interval = 0.5
 ; Available tags:
@@ -213,17 +209,15 @@ interval = 0.5
 ;   <bar-load>
 ;   <ramp-load>
 ;   <ramp-coreload>
-format = <label> 
-;<ramp-coreload>
+format = <label> <ramp-coreload>
 format-padding = 2
 label = %{A1:$TERMINAL -e htop >/dev/null 2>&1 &:}%percentage%%%{A}
-format-foreground =  #FFF
-;${colors.foreground}
+format-foreground = ${colors.foreground}
 format-background = ${colors.background}
 format-prefix-foreground = #0084FF
 format-underline = #0084FF
-format-prefix = " "
-ramp-coreload-foreground = #FFF
+format-prefix = ""
+ramp-coreload-foreground = #0084FF
 ramp-coreload-0 = ▁
 ramp-coreload-1 = ▂
 ramp-coreload-2 = ▃
@@ -234,7 +228,6 @@ ramp-coreload-6 = ▇
 ramp-coreload-7 = █
 ################################################################################
 [module/date]
-;https://github.com/jaagr/polybar/wiki/Module:-date
 type = internal/date
 interval = 5
 date = " %a %b %d, %Y"
@@ -249,29 +242,18 @@ format-underline = #62FF00
 label-font = 1
 label = "%date% %time% "
 #################################################################
-[module/kernel]
-type = custom/script
-exec = uname -r
-tail = false
-interval = 1024
-format-foreground = ${colors.foreground}
-format-background = ${colors.background}
-format-prefix = "  "
-format-prefix-foreground = #0084FF
-format-underline = #4B5665
-################################################################################
 [module/release]
 type = custom/script
-exec = (lsb_release -d | awk {'print $2'} ;echo " "; lsb_release -r | awk {'print $2'}) | tr -d '\n'
+exec = (lsb_release -d | awk {'print $2'} ;echo " "; lsb_release -r | awk {'print $2'}) | tr -d ' uname -r \n'
 interval = 60000
 format-foreground = ${colors.foreground}
 format-background = ${colors.background}
-format-prefix = "   "
+format-prefix = " "
 format-prefix-foreground = #0084FF
 format-underline = #0084FF
+label-padding = 1
 ################################################################################
 [module/sep]
-; alternative separator
 type = custom/text
 content = 
 content-foreground = ${colors.foreground}
@@ -294,44 +276,49 @@ exec = python -u ~/.config/polybar/scripts/weather.py
 tail = true
 #################################################################################
 [module/wireless-network]
+type = internal/network
+interface = ${env:WIRELESS}
+#################################################################################
+[module/wired-network]
+type = internal/network
+interface = enp1s0f1
+#################################################################################
+[module/network]
 ;https://github.com/jaagr/polybar/wiki/Module:-network
 type = internal/network
 interval = 3.0
 interface = ${env:WIRELESS}
-; interface = wlp2s0
-format-connected = <ramp-signal> <label-connected>
+format-connected =  <ramp-signal> <label-connected>
 label-connected = %essid%
-ramp-signal-0 = ▁
-ramp-signal-1 = ▂
-ramp-signal-2 = ▃
-ramp-signal-3 = ▄
-ramp-signal-4 = ▅
-ramp-signal-5 = ▆
-ramp-signal-6 = ▇
-ramp-signal-7 = █
+;%downspeed:9%
+ramp-signal-0 = 󰤯
+ramp-signal-1 = 󰤟
+ramp-signal-2 = 󰤟
+ramp-signal-3 = 󰤢
+ramp-signal-4 = 󰤢
+ramp-signal-5 = 󰤥
+ramp-signal-6 = 󰤨
+ramp-signal-7 = 󰤨
 format-connected-foreground = ${colors.foreground}
 format-connected-background = ${colors.background}
-format-connected-prefix = "  "
+format-disconnected = <label-disconnected>
 format-connected-prefix-foreground = #7e52c6
 format-connected-prefix-background = ${colors.background}
 format-connected-underline = #7e52c6
 label-disconnected = %ifname% disconnected
-label-disconnected-foreground = ${colors.alert}
+label-disconnected-foreground = ${colors.foreground}
 label-disconnected-background = ${colors.background}
-animation-packetloss-framerate = 500
-format-disconnected = <label-disconnected>
-format-disconnected-foreground = ${colors.alert}
-format-disconnected-background = ${colors.background}
-format-disconnected-prefix = "  "
-format-disconnected-prefix-foreground = ${colors.alert}
+format-disconnected-prefix-foreground = ${colors.foreground}
 format-disconnected-prefix-background = ${colors.background}
 format-disconnected-underline =${colors.alert}
+format-disconnected-prefix = "󰤮 "
 ################################################################################
 [module/xbacklight]
 ;https://github.com/jaagr/polybar/wiki/Module:-xbacklight
 type = internal/xbacklight
-format = <label> 
-format-prefix = "   "
+format = <label>
+format-prefix = ""
+label-padding = 1
 format-prefix-foreground = ${colors.foreground}
 format-prefix-background = ${colors.background}
 format-prefix-underline = #9f78e1
@@ -354,10 +341,9 @@ format-background = ${colors.background}
 type = custom/script
 tail = true
 format-underline = #FF0000
-label-foreground = #fff
-format-foreground = ${colors.foreground}
+label-foreground = ${colors.foreground}
 format-background = ${colors.background}
-label-padding = 2
+label-padding = 1
 exec = pulseaudio-control --icons-volume " , " --icon-muted " "  --sink-nicknames-from "device.description" listen
 click-left = exec pavucontrol 
 click-right = pulseaudio-control togmute
