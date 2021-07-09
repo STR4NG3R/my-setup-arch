@@ -35,7 +35,7 @@ neofetcht ttf-nerd-fonts-symbols  powerline-fonts \
 python-psutil python-pip wget playerctl neovim-git \
 crda  ranger ueberzug atool ripgrep fzf \
 uctags-git nodejs-lts-fermiu yarn jq gitui \
-pamixer lsb_release ncmpcpp bat nvim-git 
+pamixer lsb_release ncmpcpp bat neovim
 
 chsh -s $(which zsh)
 read -p "${turquoiseColour}Would You like install GUI? y/n " opt
