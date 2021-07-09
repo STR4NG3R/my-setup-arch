@@ -27,31 +27,35 @@ cd "$PATH_DIR/trizen-git"
 makepkg -si
 
 trizen -S --noedit \
-zsh python gvfs gvfs-mtp \
-gzip alacritty-ligatures \
+zsh-theme-powerlevel10k zsh oh-my-zsh-git \
+python gvfs gvfs-mtp gzip alacritty-ligatures \
 networkmanager bashtop tlp tmux ufw  udisks2 \
 pulseaudio noto-fonts noto-fonts-cjk ttf-font-awesome \
 neofetcht ttf-nerd-fonts-symbols  powerline-fonts \
 python-psutil python-pip wget playerctl neovim-git \
 crda  ranger ueberzug atool ripgrep fzf \
-uctags-git nodejs-lts-fermiu yarn cmus jq gitui oh-my-zsh-git \
-pamixer lsb_release
+uctags-git nodejs-lts-fermiu yarn jq gitui \
+pamixer lsb_release ncmpcpp bat nvim-git 
 
 chsh -s $(which zsh)
 read -p "${turquoiseColour}Would You like install GUI? y/n " opt
+
 case $opt in 
     [yY]* )
         trizen -S --noedit xfce4-taskmanager adapta-gtk-theme \
         pavucontrol polkit polkit-gnome redshift lxappearance rofi \
         flameshot lightdm lightdm-gtk-greeter thunar thunar-archive-plugin \
-        dunst feh picom-jonaburg-git blight udiskie mupdf bat zathura \
+        dunst feh picom-jonaburg-git blight udiskie mupdf zathura \
         zathura-pdf-mupdfpowerlevel10k qt5ct\
-        xclip nerd-fonts-jetbrains-mono nerd-fonts-ubuntu-mono nm-connection-editor arandr
+        xclip nerd-fonts-jetbrains-mono nerd-fonts-ubuntu-mono \
+        nm-connection-editor arandr zathura-pdf-mupdf \
+        ttf-material-design-icons-git
 
         echo "Choose your WM Setup${redColour}"
         echo "1.- [q]tile"
         echo "2.- [i]3${endColour}"
         read -p "" opt
+
         case $opt in
             [qQ]* ) 
                 source "$PATH_DIR/installation_folder/qtile_install.sh"
@@ -67,8 +71,7 @@ esac
 
 
 git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
-git clone https://github.com/wbthomason/packer.nvim\
- ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+git clone https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
 echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc
 
@@ -88,6 +91,13 @@ echo "${turquoiseColour}All common packages and config files have been installed
 pip install --user neovim
 pip install --user jedi
 
+sudo npm i -g \
+  prettier typescript import-sort-cli \
+  import-sort-parser-babylon \
+  import-sort-parser-typescript \
+  import-sort-style-renke \
+  emmet-ls
+
 sudo systemctl enable lightdm
 sudo systemctl enable NetworkManager
 sudo systemctl enable ufw
@@ -102,4 +112,3 @@ Section "InputClass"
         Option "Tapping" "on"
 EndSection
 EOF
-
