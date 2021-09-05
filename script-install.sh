@@ -49,7 +49,8 @@ case $opt in
         zathura-pdf-mupdfpowerlevel10k qt5ct\
         xclip nerd-fonts-jetbrains-mono nerd-fonts-ubuntu-mono \
         nm-connection-editor arandr zathura-pdf-mupdf \
-        ttf-material-design-icons-git
+        ttf-material-design-icons-git xfce4-settings thunar \
+        thunar-archive-plugin
 
         echo "Choose your WM Setup${redColour}"
         echo "1.- [q]tile"
