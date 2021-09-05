@@ -1,10 +1,3 @@
-nmap <C-a> <Plug>(dial-increment)
-nmap <C-x> <Plug>(dial-decrement)
-vmap <C-a> <Plug>(dial-increment)
-vmap <C-x> <Plug>(dial-decrement)
-vmap g<C-a> <Plug>(dial-increment-additional)
-vmap g<C-x> <Plug>(dial-decrement-additional)
-
 nmap <F5> <Plug>RestNvim<CR>
 nmap <F7> :DBUIToggle<CR>
 nmap <F8> :NvimTreeToggle<CR>
@@ -51,3 +44,9 @@ nnoremap <nowait> <silent> <M-k> :resize +2<CR>
 nnoremap <nowait> <silent> <M-j> :resize -2<CR>
 nnoremap <nowait> <silent> <M-h> :vertical resize -2<CR>
 nnoremap <nowait> <silent> <M-l> :vertical resize +2<CR>
+
+nnoremap <silent> gs :Snek<CR>
+nnoremap <silent> gc :CamelB<CR>
+nnoremap <silent> gP :Camel<CR>
+nnoremap <silent> gk :Kebab<CR>
+

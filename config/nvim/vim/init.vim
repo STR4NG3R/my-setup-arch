@@ -13,17 +13,23 @@ set cmdheight=1
 set smartcase
 set nobackup
 set nowritebackup
-set updatetime=750
+set updatetime=300
+set timeoutlen=700
+set numberwidth=2
 set shortmess+=c
 set ve+=onemore
+set autoindent
+set smartindent
 
-inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
-inoremap <silent><expr> <C-b>     compe#scroll({ 'delta': -4 })
+let g:import_sort_auto = 1
+let g:mapleader = ","
+let g:maplocalleader = ","
 
-" let g:compe.source.vim_dadbod_completion = v:true
+nnoremap <leader>S :lua require('spectre').open()<CR>
+nnoremap <leader>sw :lua require('spectre').open_visual({select_word=true})<CR>
+vnoremap <leader>s :lua require('spectre').open_visual()<CR>
+nnoremap <leader>sp viw:lua require('spectre').open_file_search()<cr>
+
 let g:vim_dadbod_completion_mark = ''
 
 " Source is automatically added, you just need to include it in the chain complete list
@@ -36,12 +42,4 @@ let g:completion_chain_complete_list = {
 let g:completion_matching_strategy_list = ['exact', 'substring']
 " Useful if there's a lot of camel case items
 let g:completion_matching_ignore_case = 1
-nnoremap <buffer> <leader>am :ArduinoVerify<CR>
-nnoremap <buffer> <leader>au :ArduinoUpload<CR>
-nnoremap <buffer> <leader>ad :ArduinoUploadAndSerial<CR>
-nnoremap <buffer> <leader>ab :ArduinoChooseBoard<CR>
-nnoremap <buffer> <leader>ap :ArduinoChooseProgrammer<CR>
-
-
-" npm install --save-dev import-sort-cli import-sort-parser-babylon import-sort-parser-typescript import-sort-style-renke
-
+let g:blamer_enabled = 1

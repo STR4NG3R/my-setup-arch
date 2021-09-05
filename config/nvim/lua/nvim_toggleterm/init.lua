@@ -4,10 +4,10 @@ require("toggleterm").setup{
     if term.direction == "horizontal" then
       return 15
     elseif term.direction == "vertical" then
-      return vim.o.columns * 0.4
+      return vim.o.columns * 0.3
     end
   end,
-  open_mapping = [[<c-\>]],
+  open_mapping = [[<F10>]],
   hide_numbers = true, -- hide the number column in toggleterm buffers
   shade_filetypes = {},
   shade_terminals = true,
@@ -15,10 +15,7 @@ require("toggleterm").setup{
   start_in_insert = true,
   insert_mappings = true, -- whether or not the open mapping applies in insert mode
   persist_size = true,
-  -- direction = 'vertical',
-  -- direction =  'horizontal',
-  -- direction = 'window'
-  direction = 'float',
+  direction =  'horizontal',
   close_on_exit = true, -- close the terminal window when the process exits
   shell = vim.o.shell, -- change the default shell
   -- This field is only relevant if direction is set to 'float'
@@ -27,9 +24,9 @@ require("toggleterm").setup{
     -- see :h nvim_win_open for details on borders however
     -- the 'curved' border is a custom border type
     -- not natively supported but implemented in this plugin.
-    border = 'single',
+    -- border = 'single',
     -- border = 'double',
-    -- border = 'curved',
+    border = 'single',
     -- border = 'shadow',
     -- width = <value>,
     -- height = <value>,
@@ -41,18 +38,3 @@ require("toggleterm").setup{
   }
 }
 
-
-local Terminal = require('toggleterm.terminal').Terminal
-local gitui = Terminal:new({cmd = "gitui", direction="float", hidden=true})
-local tmux = Terminal:new({cmd = "tmux", direction="float", hidden=false})
-
-function _Tmux_toggle()
-  tmux:toggle()
-end
-
-function _Gitui_toggle()
-  gitui:toggle()
-end
-
-vim.api.nvim_set_keymap("n", "<leader>g", "<cmd>lua _Gitui_toggle()<CR>", {noremap = true, silent = true})
-vim.api.nvim_set_keymap("n", "<leader>t", "<cmd>lua _Tmux_toggle()<CR>", {noremap = true, silent = true})
