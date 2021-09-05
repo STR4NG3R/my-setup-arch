@@ -33,16 +33,6 @@ alert = #bd2c40
 volume-min = #a3be8c
 volume-med = #ebcb8b
 volume-max = #bf616a
-; =======================
-
-; Gotham theme ==========
-; background = #0a0f14
-; foreground = #99d1ce
-; alert = #d26937
-; volume-min = #2aa889
-; volume-med = #edb443
-; volume-max = #c23127
-; =======================
 
 ################################################################################
 ################################################################################
@@ -50,9 +40,7 @@ volume-max = #bf616a
 ################################################################################
 ################################################################################
 [bar/mainbar-i3]
-;https://github.com/jaagr/polybar/wiki/Configuration
 monitor = ${env:MONITOR}
-;monitor-fallback = HDMI1
 monitor-strict = false
 override-redirect = false
 bottom = false
@@ -65,27 +53,21 @@ radius = 0
 line-size = 2
 line-color = #000000
 border-size = 0
-;border-left-size = 25
-;border-right-size = 25
-;border-top-size = 0
-;border-bottom-size = 25
 border-color = #000000
 padding-left = 0
 padding-right = 0
-
 module-margin-left = 0
-module-margin-right = 2
+module-margin-right = 1
 
 ;https://github.com/jaagr/polybar/wiki/Fonts
-font-0 = "UbuntuMono Nerd Font:size=10;2"
-font-1 = "SourceCodePro-Regular:size=10;2"
-font-2 = "Font Awesome 5 Free:style=Regular:pixelsize=10;1"
-font-3 = "MaterialDesignIcons:pixelsize=10;1"
+font-0 = "UbuntuMono Nerd Font:size=12;0"
+font-1 = "SourceCodePro-Regular:size=12;0"
+font-2 = "Font Awesome 5 Free:style=Regular:size=12;0"
+font-3 = "MaterialDesignIcons:size=12;0"
 
 modules-left = i3 xwindow
 modules-center = 
-modules-right = backlight-acpi pulseaudio-control cpu date network battery
-; separator = 
+modules-right = backlight-acpi pulseaudio-control cpu date wired-network network battery
 
 tray-position = right
 tray-detached = false
@@ -135,17 +117,18 @@ label-unfocused-background = ${colors.background}
 label-unfocused-foreground = ${colors.foreground}
 label-unfocused-underline = ${colors.foreground}
 
-; visible = Active workspace on unfocused monitor
 label-visible = %name%
 label-visible-background = ${colors.background}
 label-visible-foreground = ${colors.foreground}
 label-visible-underline = ${colors.foreground}
 label-visible-padding = 1
 
-label-urgent = %icon% %name%
-label-urgent-background = ${self.label-focused-background}
-label-urgent-foreground = #db104e
+label-urgent = %name%
+label-urgent-background = ${colors.background}
+label-urgent-foreground = ${colors.foreground}
+label-urgent-underline = #db104e
 label-urgent-padding = 1
+
 format-foreground = ${colors.foreground}
 format-background = ${colors.background}
 
@@ -253,16 +236,6 @@ format-prefix-foreground = #0084FF
 format-underline = #0084FF
 label-padding = 1
 ################################################################################
-[module/sep]
-type = custom/text
-content = 
-content-foreground = ${colors.foreground}
-content-background =  ${colors.background}
-format-foreground = ${colors.foreground}
-format-background = ${colors.background}
-format-prefix-foreground = #62FF00
-format-underline = #62FF00
-################################################################################
 [module/weather]
 type = custom/script
 interval = 10
@@ -282,6 +255,12 @@ interface = ${env:WIRELESS}
 [module/wired-network]
 type = internal/network
 interface = enp1s0f1
+format-connected = 󰀟 <label-connected>
+format-disconnected = ""
+format-connected-foreground = ${colors.foreground}
+format-connected-background = ${colors.background}
+format-connected-underline = #FF8
+
 #################################################################################
 [module/network]
 ;https://github.com/jaagr/polybar/wiki/Module:-network
@@ -301,7 +280,7 @@ ramp-signal-6 = 󰤨
 ramp-signal-7 = 󰤨
 format-connected-foreground = ${colors.foreground}
 format-connected-background = ${colors.background}
-format-disconnected = <label-disconnected>
+format-disconnected = ""
 format-connected-prefix-foreground = #7e52c6
 format-connected-prefix-background = ${colors.background}
 format-connected-underline = #7e52c6
