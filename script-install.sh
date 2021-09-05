@@ -35,16 +35,16 @@ neofetcht ttf-nerd-fonts-symbols  powerline-fonts \
 python-psutil python-pip wget playerctl neovim-git \
 crda  ranger ueberzug atool ripgrep fzf \
 uctags-git nodejs-lts-fermiu yarn jq gitui \
-pamixer lsb_release ncmpcpp bat neovim
+pamixer lsb_release ncmpcpp bat neovim ripgrep sed
 
 chsh -s $(which zsh)
 read -p "${turquoiseColour}Would You like install GUI? y/n " opt
 
 case $opt in 
     [yY]* )
-        trizen -S --noedit xfce4-taskmanager adapta-gtk-theme \
-        pavucontrol polkit polkit-gnome redshift lxappearance rofi \
-        flameshot lightdm lightdm-gtk-greeter thunar thunar-archive-plugin \
+        trizen -S --noedit adapta-gtk-theme pavucontrol \
+        polkit polkit-gnome redshift lxappearance rofi \
+        flameshot lightdm lightdm-gtk-greeter \
         dunst feh picom-jonaburg-git blight udiskie mupdf zathura \
         zathura-pdf-mupdfpowerlevel10k qt5ct\
         xclip nerd-fonts-jetbrains-mono nerd-fonts-ubuntu-mono \
