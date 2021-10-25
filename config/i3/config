@@ -1,0 +1,252 @@
+set $mod Mod4
+set $alt Mod1
+
+bindsym $mod+q kill
+
+font pango:Hack, FontAwesome 13
+
+
+# Use Mouse+$mod to drag floating windows
+floating_modifier $mod
+mouse_warping none
+
+set $myTerm alacritty
+bindsym $mod+Return exec $myTerm
+
+bindsym Caps_Lock exec "~/.config/scripts/keylock.sh caps"
+bindsym Num_Lock exec "~/.config/scripts/keylock.sh num"
+
+# start program launcher
+bindsym $mod+space exec --no-startup-id "$HOME/.config/rofi/launchers/ribbon/launcher.sh"
+bindsym $mod+b exec --no-startup-id "rofi -show window -show-icons"
+bindsym $mod+Shift+x exec --no-startup-id "$HOME/.config/rofi/powermenu/powermenu.sh"
+bindsym $mod+5 exec --no-startup-id "$HOME/.config/rofi/applets/applets/mpd.sh"
+bindsym $mod+6 exec --no-startup-id "$HOME/.config/rofi/applets/applets/time.sh"
+bindsym $mod+7 exec --no-startup-id "$HOME/.config/rofi/applets/applets/quicklinks.sh"
+bindsym $mod+8 exec --no-startup-id "$HOME/.config/rofi/applets/applets/apps.sh"
+bindsym $mod+9 exec --no-startup-id "$HOME/.config/rofi/applets/applets/network.sh"
+bindsym $mod+0 exec --no-startup-id "$HOME/.config/scripts/youtube_download.sh"
+
+# Start at boot
+exec --no-startup-id "~/.config/scripts/autostart.sh i3"
+
+# Screen brightness controls
+bindsym XF86MonBrightnessUp exec "light -A 5"
+bindsym XF86MonBrightnessDown exec "light -U 5"
+bindsym $mod+3 exec "light -U 5"
+bindsym $mod+4 exec "light -A 5"
+
+# Audio controls
+bindsym XF86AudioLowerVolume exec "pamixer -d 5"
+bindsym XF86AudioRaiseVolume exec "pamixer -i 5"
+bindsym $mod+1 exec "pamixer -d 5"
+bindsym $mod+2 exec "pamixer -i 5"
+
+bindsym XF86AudioPlay exec "playerctl play-pause"
+bindsym XF86AudioNext exec "playerctl next"
+bindsym XF86AudioPrev exec "playerctl prev"
+bindsym XF86AudioStop exec "playerctl stop"
+bindsym XF86AudioMute exec ~/.config/scripts/mute-scripts.sh
+
+# Start Applications
+bindsym $mod+Shift+n --release exec "killall dunst;"
+bindsym Print exec --no-startup-id xfce4-screenshooter
+bindsym Shift+Print --release exec flameshot gui
+
+focus_follows_mouse yes
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# workspace back and forth (with/without active container)
+workspace_auto_back_and_forth no
+# bindsym $mod+b workspace back_and_forth
+
+# split orientation
+# bindsym $mod+z split h;exec notify-send 'tile horizontally'
+# bindsym $mod+v split v;exec notify-send 'tile vertically'
+bindsym $mod+t split toggle;exec notify-send 'Toggle Direction'
+
+# toggle fullscreen mode for the focused container
+bindsym $mod+g fullscreen toggle
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+m focus mode_toggle
+
+# toggle sticky
+# bindsym $mod+Shift+s sticky toggle
+bindsym $mod+Shift+2 exec ~/.i3/i3-display-swap.sh
+
+# focus the parent container
+bindsym $alt+a focus parent
+
+#navigate workspaces next / previous
+#bindsym $mod+Tab+l workspace next
+#bindsym $mod+Tab+h workspace prev
+
+set $ws1 1:
+set $ws2 2:
+set $ws3 3:
+set $ws4 4:
+set $ws5 5:
+set $ws6 6:
+set $ws7 7:
+set $ws8 8:
+
+#switch workspace to monitor
+bindsym $mod+$alt+h move workspace to output left
+bindsym $mod+$alt+l move workspace to output right
+
+# switch to workspace
+bindsym $mod+a workspace $ws1
+bindsym $mod+s workspace $ws2
+bindsym $mod+d workspace $ws3
+bindsym $mod+f workspace $ws4
+bindsym $mod+u workspace $ws5
+bindsym $mod+i workspace $ws6
+bindsym $mod+o workspace $ws7
+bindsym $mod+p workspace $ws8
+
+# Move focused container to workspace
+bindsym $mod+Ctrl+a move container to workspace $ws1
+bindsym $mod+Ctrl+s move container to workspace $ws2
+bindsym $mod+Ctrl+d move container to workspace $ws3
+bindsym $mod+Ctrl+f move container to workspace $ws4
+bindsym $mod+Ctrl+u move container to workspace $ws5
+bindsym $mod+Ctrl+i move container to workspace $ws6
+bindsym $mod+Ctrl+o move container to workspace $ws7
+bindsym $mod+Ctrl+p move container to workspace $ws8
+
+# Move to workspace with focused container
+bindsym $mod+Shift+a move container to workspace $ws1; workspace $ws1
+bindsym $mod+Shift+s move container to workspace $ws2; workspace $ws2
+bindsym $mod+Shift+d move container to workspace $ws3; workspace $ws3
+bindsym $mod+Shift+f move container to workspace $ws4; workspace $ws4
+bindsym $mod+Shift+u move container to workspace $ws5; workspace $ws5
+bindsym $mod+Shift+i move container to workspace $ws6; workspace $ws6
+bindsym $mod+Shift+o move container to workspace $ws7; workspace $ws7
+bindsym $mod+Shift+p move container to workspace $ws8; workspace $ws8
+
+#Move to monitor
+bindsym $mod+Shift+v move workspace to output left
+bindsym $mod+Shift+b move workspace to output down 
+bindsym $mod+Shift+n move workspace to output up 
+bindsym $mod+Shift+m move workspace to output right
+bindsym $mod+x exec i3-exit
+
+# Open applications on specific workspaces
+assign [class="Thunderbird"] $ws1
+assign [class="Firefox"] $ws2
+assign [class="Pcmanfm"] $ws3
+
+# Open specific applications in floating mode
+for_window [title="alsamixer"] floating enable 
+for_window [class="Clipgrab"] floating enable
+for_window [title="File Transfer*"] floating enable
+for_window [class="Galculator"] floating enable
+for_window [class="GParted"] floating enable
+for_window [title="i3_help"] floating enable sticky enable
+for_window [class="Lightdm-gtk-greeter-settings"] floating enable
+for_window [class="Lxappearance"] floating enable sticky enable
+for_window [class="xfce4-terminal"] floating enable
+for_window [class="xfce4-screenshooter"] floating enable
+for_window [title="pavucontrol"] floating enable
+for_window [class="Nitrogen"] floating enable sticky enable
+for_window [class="Oblogout"] fullscreen enable
+for_window [class="octopi"] floating enable
+for_window [class="Pamac-manager"] floating enable
+for_window [class="Pavucontrol"] floating enable
+for_window [class="qt5ct"] floating enable sticky enable
+for_window [class="Qtconfig-qt4"] floating enable sticky enable
+for_window [class="Simple-scan"] floating enable
+for_window [class="(?i)System-config-printer.py"] floating enable
+for_window [class="Thus"] floating enable
+for_window [class="Timeset-gui"] floating enable
+for_window [class="feh*"] floating enable
+for_window [urgent=latest] focus
+
+# reload the configuration file
+bindsym $mod+Ctrl+r reload
+
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+
+# Set shut down, restart and locking features
+# bindsym $alt+l exec --no-startup-id ~/.config/rofi/bin/menu_powermenu
+
+bindsym $mod+Ctrl+h resize shrink width 4 px or 4 ppt
+bindsym $mod+Ctrl+j resize grow height 4 px or 4 ppt
+bindsym $mod+Ctrl+k resize shrink height 4 px or 4 ppt
+bindsym $mod+Ctrl+l resize grow width 4 px or 4 ppt
+
+# Autostart applications
+exec --no-startup-id bash "~/.config/scripts/autostart.sh"
+
+# Color palette used for the terminal ( ~/.Xresources file )
+# Colors are gathered based on the documentation:
+# https://i3wm.org/docs/userguide.html#xresources
+# Change the variable name at the place you want to match the color
+# of your terminal like this:
+# [example]
+# If you want your bar to have the same background color as your 
+# terminal background change the line 362 from:
+# background #14191D
+# to:
+# background $term_background
+# Same logic applied to everything else.
+
+set_from_resource $term_background background
+set_from_resource $term_foreground foreground
+
+set_from_resource $term_color0     color0
+set_from_resource $term_color1     color1
+set_from_resource $term_color2     color2
+set_from_resource $term_color3     color3
+set_from_resource $term_color4     color4
+set_from_resource $term_color5     color5
+set_from_resource $term_color6     color6
+set_from_resource $term_color7     color7
+set_from_resource $term_color8     color8
+set_from_resource $term_color9     color9
+set_from_resource $term_color10    color10
+set_from_resource $term_color11    color11
+set_from_resource $term_color12    color12
+set_from_resource $term_color13    color13
+set_from_resource $term_color14    color14
+set_from_resource $term_color15    color15
+
+# Theme colors
+# class                   border  backgr. text    indic.   child_border 
+client.focused          #556064 #A77AC4 #80FFF9 #FDF6E3
+client.focused_inactive #2F3D44 #2F3D44 #AD69AF #454948
+client.unfocused        #2F3D44 #7197E7 #AD69AF #454948
+client.urgent           #CB4B16 #FDF6E3 #AD69AF #268BD2
+client.placeholder      #000000 #0c0c0c #ffffff #000000 
+client.background       #2B2C2B
+
+for_window [class=".*"] border pixel 0
+
+smart_borders on
+smart_gaps on
+gaps inner 3
+gaps outer 3
+
+new_window pixel 0
+new_float pixel 0
+hide_edge_borders none
+
+exec_always --no-startup-id sh $HOME/.config/polybar/launch.sh
+
+# vim:ft=conf

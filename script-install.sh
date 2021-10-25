@@ -26,23 +26,23 @@ git clone https://aur.archlinux.org/yay-bin.git
 cd "$PATH_DIR/yay-bin"
 makepkg -si
 
-trizen -S --noedit \
+yay -S  \
 zsh-theme-powerlevel10k zsh oh-my-zsh-git \
 python gvfs gvfs-mtp gzip alacritty-ligatures \
 networkmanager bashtop tlp tmux ufw  udisks2 \
 pulseaudio noto-fonts noto-fonts-cjk ttf-font-awesome \
-neofetcht ttf-nerd-fonts-symbols  powerline-fonts \
+neofetch ttf-nerd-fonts-symbols  powerline-fonts \
 python-psutil python-pip wget playerctl neovim-git \
 crda  ranger ueberzug atool ripgrep fzf \
-uctags-git nodejs-lts-fermiu yarn jq gitui \
-pamixer lsb_release ncmpcpp bat neovim ripgrep sed
+uctags-git nodejs-lts-fermium yarn jq gitui \
+pamixer lsb_release ncmpcpp bat neovim ripgrep sed ufw
 
 chsh -s $(which zsh)
 read -p "${turquoiseColour}Would You like install GUI? y/n " opt
 
 case $opt in 
     [yY]* )
-        trizen -S --noedit adapta-gtk-theme pavucontrol \
+        yay -S adapta-gtk-theme pavucontrol \
         polkit polkit-gnome redshift lxappearance rofi \
         flameshot lightdm lightdm-gtk-greeter \
         dunst feh picom-jonaburg-git blight udiskie mupdf zathura \
@@ -92,12 +92,11 @@ echo "${turquoiseColour}All common packages and config files have been installed
 pip install --user neovim
 pip install --user jedi
 
-sudo npm i -g \
-  prettier typescript import-sort-cli \
+sudo yarn add global \
+  import-sort-cli \
   import-sort-parser-babylon \
   import-sort-parser-typescript \
-  import-sort-style-renke \
-  emmet-ls
+  import-sort-style-renke 
 
 sudo systemctl enable lightdm
 sudo systemctl enable NetworkManager
@@ -105,7 +104,7 @@ sudo systemctl enable ufw
 sudo systemctl enable tlp
 sudo systemctl enable bluetooth.service
 
-mkdir -p /etc/X11/xorg.conf.d && sudo tee <<'EOF' /etc/X11/xorg.conf.d/90-touchpad.conf 1> /dev/null
+sudo mkdir -p /etc/X11/xorg.conf.d && sudo tee <<'EOF' /etc/X11/xorg.conf.d/90-touchpad.conf 1> /dev/null
 Section "InputClass"
         Identifier "touchpad"
         MatchIsTouchpad "on"
