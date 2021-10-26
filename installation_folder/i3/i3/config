@@ -52,6 +52,7 @@ bindsym XF86AudioMute exec ~/.config/scripts/mute-scripts.sh
 bindsym $mod+Shift+n --release exec "killall dunst;"
 bindsym Print exec --no-startup-id xfce4-screenshooter
 bindsym Shift+Print --release exec flameshot gui
+bindsym $mod+minus --release exec flameshot gui
 
 focus_follows_mouse yes
 

@@ -8,7 +8,6 @@ then
     cd $HOME/Music/
     youtube-dl -x --embed-thumbnail --audio-format mp3 $link
     notify-send "Downloaded"
-    notify-send 
     cd $cwd
   else 
     notify-send "Invalid Link"
