@@ -35,7 +35,7 @@ neofetch ttf-nerd-fonts-symbols  powerline-fonts \
 python-psutil python-pip wget playerctl neovim-git \
 crda  ranger ueberzug atool ripgrep fzf \
 uctags-git nodejs-lts-fermium yarn jq gitui \
-pamixer lsb_release ncmpcpp bat neovim ripgrep sed ufw
+pamixer lsb_release ncmpcpp bat neovim ripgrep sed ufw \
 
 chsh -s $(which zsh)
 read -p "${turquoiseColour}Would You like install GUI? y/n " opt
@@ -50,7 +50,7 @@ case $opt in
         xclip nerd-fonts-jetbrains-mono nerd-fonts-ubuntu-mono \
         nm-connection-editor arandr zathura-pdf-mupdf \
         ttf-material-design-icons-git xfce4-settings thunar \
-        thunar-archive-plugin
+        thunar-archive-plugin blueman
 
         echo "Choose your WM Setup${redColour}"
         echo "1.- [q]tile"
