@@ -41,7 +41,7 @@ chsh -s $(which zsh)
 read -p "${turquoiseColour}Would You like install GUI? y/n " opt
 
 case $opt in 
-    [yY]* )
+    [yY] )
         yay -S adapta-gtk-theme pavucontrol \
         polkit polkit-gnome redshift lxappearance rofi \
         flameshot lightdm lightdm-gtk-greeter \
@@ -58,21 +58,22 @@ case $opt in
         read -p "" opt
 
         case $opt in
-            [qQ]* ) 
+            [qQ] ) 
                 source "$PATH_DIR/installation_folder/qtile_install.sh"
                 install_qtile $PATH_DIR $USER_HOME
-                echo "${greenColour}Installation Succesful";;
-            [iI]* )
+                echo "${greenColour}Installation Succesful"
+		;;
+            [iI] )
                 source "$PATH_DIR/installation_folder/i3_install.sh"
                 install_i3 $PATH_DIR $USER_HOME
-                echo "${greenColour}Installation Succesful";;
+                echo "${greenColour}Installation Succesful"
+		;;
         esac
     ;;
 esac
 
 
 git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
-git clone https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
 echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc
 
