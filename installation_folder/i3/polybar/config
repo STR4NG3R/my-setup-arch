@@ -3,6 +3,8 @@
 margin-top = 0
 margin-bottom = 0
 
+
+
 [settings]
 ;https://github.com/jaagr/polybar/wiki/Configuration#application-settings
 throttle-output = 5
@@ -54,8 +56,8 @@ line-size = 2
 line-color = #000000
 border-size = 0
 border-color = #000000
-padding-left = 0
-padding-right = 0
+padding-left = 1
+padding-right = 2
 module-margin-left = 0
 module-margin-right = 1
 
@@ -65,9 +67,9 @@ font-1 = "SourceCodePro-Regular:size=12;0"
 font-2 = "Font Awesome 5 Free:style=Regular:size=12;0"
 font-3 = "MaterialDesignIcons:size=12;0"
 
-modules-left = i3 xwindow
+modules-left = i3
 modules-center = 
-modules-right = backlight-acpi pulseaudio-control cpu date wired-network network battery
+modules-right = redshift cpu date calendar pulseaudio wired-network network battery
 
 tray-position = right
 tray-detached = false
@@ -137,19 +139,10 @@ format-background = ${colors.background}
 ############                       MODULES A-Z                      ############
 ################################################################################
 ################################################################################
-[module/backlight-acpi]
-inherit = module/xbacklight
-type = internal/backlight
-card = intel_backlight
-format-foreground = ${colors.foreground}
-format-background = ${colors.background}
-format-prefix-foreground = #7D49B6
-format-prefix-underline = #7D49B6
-format-underline = #7D49B6
-################################################################################
 [module/battery]
 ;https://github.com/jaagr/polybar/wiki/Module:-battery
 type = internal/battery
+
 battery = BAT1
 adapter = AC0
 full-at = 100
@@ -158,7 +151,7 @@ label-charging =  %percentage%%
 format-charging-foreground = ${colors.foreground}
 format-charging-background = ${colors.background}
 format-charging-underline = #a3c725
-format-discharging = <ramp-capacity> <label-discharging>
+format-discharging = <ramp-capacity>  <label-discharging>
 label-discharging =  %percentage%%
 format-discharging-underline = #c7ae25
 format-discharging-foreground = ${colors.foreground}
@@ -168,39 +161,33 @@ format-full-prefix-foreground = #a3c725
 format-full-underline = #a3c725
 format-full-foreground = ${colors.foreground}
 format-full-background = ${colors.background}
-ramp-capacity-0 = " "
-ramp-capacity-1 = " "
-ramp-capacity-2 = " "
-ramp-capacity-3 = " "   
-ramp-capacity-4 = " "  
+ramp-capacity-0 =  
+ramp-capacity-1 =  
+ramp-capacity-2 =  
+ramp-capacity-3 =  
+ramp-capacity-4 =  
 ramp-capacity-foreground = #c7ae25
-animation-charging-0 = " "
-animation-charging-1 = " "
-animation-charging-2 = " "
-animation-charging-3 = " "
-animation-charging-4 = " "
+animation-charging-0 =  
+animation-charging-1 =  
+animation-charging-2 =  
+animation-charging-3 =  
+animation-charging-4 =  
 animation-charging-foreground = #a3c725
 animation-charging-framerate = 750
 ################################################################################
 [module/cpu]
-;https://github.com/jaagr/polybar/wiki/Module:-cpu
-label-padding = 2
+label-padding = 1
 type = internal/cpu
-interval = 0.5
-; Available tags:
-;   <label> (default)
-;   <bar-load>
-;   <ramp-load>
-;   <ramp-coreload>
+interval = 2
 format = <label> <ramp-coreload>
-format-padding = 2
+format-padding = 1
 label = %{A1:$TERMINAL -e htop >/dev/null 2>&1 &:}%percentage%%%{A}
 format-foreground = ${colors.foreground}
 format-background = ${colors.background}
 format-prefix-foreground = #0084FF
 format-underline = #0084FF
-format-prefix = ""
 ramp-coreload-foreground = #0084FF
+format-prefix = ""
 ramp-coreload-0 = ▁
 ramp-coreload-1 = ▂
 ramp-coreload-2 = ▃
@@ -210,43 +197,30 @@ ramp-coreload-5 = ▆
 ramp-coreload-6 = ▇
 ramp-coreload-7 = █
 ################################################################################
-[module/date]
-type = internal/date
-interval = 5
-date = " %a %b %d, %Y"
-date-alt = " %a %b %d, %Y"
-time = %l:%M%p
-time-alt = %l:%M%p
-format-prefix = "  "
+[module/calendar]
+label-padding = 1
+type = custom/script
+format-prefix = 󰸘
+label = "%output%"  
+interval = 5 
+exec = ~/.config/polybar/scripts/date.sh 
+click-left = ~/.config/polybar/scripts/calendar.sh curr
+scroll-up = ~/.config/polybar/scripts/calendar.sh next
+scroll-down = ~/.config/polybar/scripts/calendar.sh prev
 format-foreground =  ${colors.foreground}
 format-background = ${colors.background}
 format-prefix-foreground = #62FF00
 format-underline = #62FF00
-label-font = 1
-label = "%date% %time% "
-#################################################################
-[module/release]
-type = custom/script
-exec = (lsb_release -d | awk {'print $2'} ;echo " "; lsb_release -r | awk {'print $2'}) | tr -d ' uname -r \n'
-interval = 60000
-format-foreground = ${colors.foreground}
-format-background = ${colors.background}
-format-prefix = " "
-format-prefix-foreground = #0084FF
-format-underline = #0084FF
-label-padding = 1
-################################################################################
+#################################################################################
 [module/weather]
+label-padding = 1
 type = custom/script
-interval = 10
-format = <label>
-format-prefix = " "
-format-prefix-foreground = #3EC13F
-format-underline = #3EC13F
-format-foreground = ${colors.foreground}
+exec = ~/.config/polybar/scripts/weather.sh
+interval = 180000
+format-foreground =  ${colors.foreground}
 format-background = ${colors.background}
-exec = python -u ~/.config/polybar/scripts/weather.py
-tail = true
+format-prefix-foreground = #62FF00
+format-underline = #62FF00
 #################################################################################
 [module/wireless-network]
 type = internal/network
@@ -260,14 +234,13 @@ format-disconnected = ""
 format-connected-foreground = ${colors.foreground}
 format-connected-background = ${colors.background}
 format-connected-underline = #FF8
-
 #################################################################################
 [module/network]
 ;https://github.com/jaagr/polybar/wiki/Module:-network
 type = internal/network
-interval = 3.0
+interval = 20
 interface = ${env:WIRELESS}
-format-connected =  <ramp-signal> <label-connected>
+format-connected = <ramp-signal> <label-connected>
 label-connected = %essid%
 ;%downspeed:9%
 ramp-signal-0 = 󰤯
@@ -290,44 +263,21 @@ label-disconnected-background = ${colors.background}
 format-disconnected-prefix-foreground = ${colors.foreground}
 format-disconnected-prefix-background = ${colors.background}
 format-disconnected-underline =${colors.alert}
-format-disconnected-prefix = "󰤮 "
+format-disconnected-prefix = 󰤮
 ################################################################################
-[module/xbacklight]
-;https://github.com/jaagr/polybar/wiki/Module:-xbacklight
-type = internal/xbacklight
-format = <label>
-format-prefix = ""
-label-padding = 1
-format-prefix-foreground = ${colors.foreground}
-format-prefix-background = ${colors.background}
-format-prefix-underline = #9f78e1
-format-underline = #9f78e1
-label = %percentage%%
-bar-width = 10
-bar-indicator = 
-bar-indicator-foreground = #fff
-bar-indicator-font = 2
-bar-fill = 
-bar-fill-font = 2
-bar-fill-foreground = #9f78e1
-bar-empty = 
-bar-empty-font = 2
-bar-empty-foreground = #fff
-format-foreground = ${colors.foreground}
-format-background = ${colors.background}
-################################################################################
-[module/pulseaudio-control]
+[module/pulseaudio]
 type = custom/script
 tail = true
+label-padding = 1
+exec = ~/.config/polybar/scripts/pavolume.sh --listen
+click-left = exec pavucontrol 
+click-right =  ~/.config/polybar/scripts/pavolume.sh --togmute
+click-middle = pulseaudio-control --sink-blacklist "alsa_output.pci-0000_01_00.1.hdmi-stereo-extra2" next-sink
+scroll-up = pulseaudio-control --volume-max 120 up
+scroll-down = pulseaudio-control --volume-max 120 down
 format-underline = #FF0000
 label-foreground = ${colors.foreground}
 format-background = ${colors.background}
-label-padding = 1
-exec = pulseaudio-control --icons-volume " , " --icon-muted " "  --sink-nicknames-from "device.description" listen
-click-left = exec pavucontrol 
-click-right = pulseaudio-control togmute
-click-middle = pulseaudio-control --sink-blacklist "alsa_output.pci-0000_01_00.1.hdmi-stereo-extra2" next-sink
-scroll-up = pulseaudio-control --volume-max 130 up
-scroll-down = pulseaudio-control --volume-max 130 down
+format-prefix-foreground = #0084FF
 ################################################################################
 # vim:ft=dosini

@@ -2,13 +2,11 @@ set $mod Mod4
 set $alt Mod1
 
 bindsym $mod+q kill
-
 font pango:Hack, FontAwesome 13
-
 
 # Use Mouse+$mod to drag floating windows
 floating_modifier $mod
-mouse_warping none
+mouse_warping output
 
 set $myTerm alacritty
 bindsym $mod+Return exec $myTerm
@@ -17,24 +15,29 @@ bindsym Caps_Lock exec "~/.config/scripts/keylock.sh caps"
 bindsym Num_Lock exec "~/.config/scripts/keylock.sh num"
 
 # start program launcher
-bindsym $mod+space exec --no-startup-id "$HOME/.config/rofi/launchers/ribbon/launcher.sh"
+bindsym $mod+space exec --no-startup-id "$HOME/.config/rofi/launchers/type-2/launcher.sh"
 bindsym $mod+b exec --no-startup-id "rofi -show window -show-icons"
 bindsym $mod+Shift+x exec --no-startup-id "$HOME/.config/rofi/powermenu/powermenu.sh"
 bindsym $mod+5 exec --no-startup-id "$HOME/.config/rofi/applets/applets/mpd.sh"
 bindsym $mod+6 exec --no-startup-id "$HOME/.config/rofi/applets/applets/time.sh"
-bindsym $mod+7 exec --no-startup-id "$HOME/.config/rofi/applets/applets/quicklinks.sh"
-bindsym $mod+8 exec --no-startup-id "$HOME/.config/rofi/applets/applets/apps.sh"
-bindsym $mod+9 exec --no-startup-id "$HOME/.config/rofi/applets/applets/network.sh"
+bindsym $mod+7 exec --no-startup-id "$HOME/.config/rofi/applets/bin/quicklinks.sh"
+bindsym $mod+8 exec --no-startup-id "$HOME/.config/rofi/applets/bin/apps.sh"
+bindsym $mod+9 exec --no-startup-id "$HOME/.config/rofi/powermenu/type-2/powermenu.sh"
 bindsym $mod+0 exec --no-startup-id "$HOME/.config/scripts/youtube_download.sh"
 
 # Start at boot
 exec --no-startup-id "~/.config/scripts/autostart.sh i3"
+bindsym $alt+p exec flameshot screen -n 1 -c
+bindsym $alt+Shift+p exec flameshot gui
 
 # Screen brightness controls
 bindsym XF86MonBrightnessUp exec "light -A 5"
 bindsym XF86MonBrightnessDown exec "light -U 5"
 bindsym $mod+3 exec "light -U 5"
 bindsym $mod+4 exec "light -A 5"
+
+# Lock Screen
+bindsym $alt+l exec "dm-tool lock"
 
 # Audio controls
 bindsym XF86AudioLowerVolume exec "pamixer -d 5"
@@ -53,6 +56,7 @@ bindsym $mod+Shift+n --release exec "killall dunst;"
 bindsym Print exec --no-startup-id xfce4-screenshooter
 bindsym Shift+Print --release exec flameshot gui
 bindsym $mod+minus --release exec flameshot gui
+bindsym $mod+e --release exec "neovide --neovim-bin ~/.local/bin/lvim"
 
 focus_follows_mouse yes
 
@@ -98,11 +102,11 @@ bindsym $alt+a focus parent
 #bindsym $mod+Tab+h workspace prev
 
 set $ws1 1:
-set $ws2 2:
+set $ws2 2:
 set $ws3 3:
 set $ws4 4:
 set $ws5 5:
-set $ws6 6:
+set $ws6 6:
 set $ws7 7:
 set $ws8 8:
 
@@ -119,6 +123,8 @@ bindsym $mod+u workspace $ws5
 bindsym $mod+i workspace $ws6
 bindsym $mod+o workspace $ws7
 bindsym $mod+p workspace $ws8
+
+bindsym $mod+n exec "~/.config/scripts/change_ws.sh 1"
 
 # Move focused container to workspace
 bindsym $mod+Ctrl+a move container to workspace $ws1
@@ -141,10 +147,9 @@ bindsym $mod+Shift+o move container to workspace $ws7; workspace $ws7
 bindsym $mod+Shift+p move container to workspace $ws8; workspace $ws8
 
 #Move to monitor
-bindsym $mod+Shift+v move workspace to output left
-bindsym $mod+Shift+b move workspace to output down 
-bindsym $mod+Shift+n move workspace to output up 
-bindsym $mod+Shift+m move workspace to output right
+# bindsym $mod+Shift+v move workspace to output left
+# bindsym $mod+Shift+b move workspace to output down bindsym $mod+Shift+n move workspace to output up 
+# bindsym $mod+Shift+m move workspace to output right
 bindsym $mod+x exec i3-exit
 
 # Open applications on specific workspaces
@@ -249,5 +254,14 @@ new_float pixel 0
 hide_edge_borders none
 
 exec_always --no-startup-id sh $HOME/.config/polybar/launch.sh
+
+# Set Mode Without any bynding useful for virtual box applications
+set $ModeName _
+mode "$ModeName" {
+    bindsym $mod+Shift+c reload
+    bindsym $mod+Shift+r restart
+    bindsym $alt+Tab focus right
+    bindsym $mod+n exec "~/.config/scripts/change_ws.sh 0"
+}
 
 # vim:ft=conf
