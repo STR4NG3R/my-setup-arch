@@ -11,7 +11,7 @@ an executable
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save = true
-lvim.colorscheme = "tokyonight"
+-- lvim.colorscheme = "tokyonight"
 -- to disable icons and use a minimalist setup, uncomment the following
 -- lvim.use_icons = false
 
@@ -179,18 +179,20 @@ lvim.plugins = {
     "folke/trouble.nvim",
     cmd = "TroubleToggle",
   },
-  { "phaazon/hop.nvim", branch = "v2" },
+  { "phaazon/hop.nvim",       branch = "v2" },
   { "ggandor/lightspeed.nvim" },
   { "tpope/vim-surround" },
-  { "kkoomen/vim-doge", run = ":call doge#install()" },
-  { "anuvyklack/pretty-fold.nvim",
+  { "kkoomen/vim-doge",       run = ":call doge#install()" },
+  {
+    "anuvyklack/pretty-fold.nvim",
     config = function()
       require("pretty-fold").setup()
     end
   },
   { "sQVe/sort.nvim" },
   { "ray-x/web-tools.nvim" },
-  { 'windwp/nvim-spectre',
+  {
+    'nvim-pack/nvim-spectre',
     config = function()
       require("pretty-fold").setup({
         color_devicons     = true,
@@ -382,16 +384,4 @@ vim.api.nvim_create_autocmd("FileType", {
     -- let treesitter use bash highlight for zsh files as well
     require("nvim-treesitter.highlight").attach(0, "bash")
   end,
-})
-
-
-
-
-local lspconfig = require('lspconfig')
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-lspconfig.emmet_ls.setup({
-  -- on_attach = on_attach,
-  capabilities = capabilities,
-  filetypes = { 'html', 'typescriptreact', 'javascriptreact', 'css', 'sass', 'scss', 'less', 'javascript', 'typescript' },
 })

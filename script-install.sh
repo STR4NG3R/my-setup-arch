@@ -1,4 +1,10 @@
 # #!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $EUID -ne 0 ]]; then
+  echo "❌ Run this script as root"
+  exit 1
+fi
 
 PATH_DIR=$(dirname $(readlink -f "$0"))
 USER_HOME=$(eval echo ~${SUDO_USER})
@@ -16,11 +22,11 @@ echo -e "${greenColour}Installation Begin...${endColour}"
 echo $PATH_DIR
 echo $USER_HOME
 
-# sudo pacman -Sy --noconfirm  archlinux-keyring 
-sudo pacman -Syu --noconfirm
+# pacman -Sy --noconfirm  archlinux-keyring
+pacman -Syu --noconfirm
 
 echo -e "${yellowColour}Installing packages... ${endColour}"
-sudo pacman -S --noconfirm git base-devel
+pacman -S --noconfirm git base-devel
 
 git clone https://aur.archlinux.org/yay-bin.git
 cd "$PATH_DIR/yay-bin"
@@ -34,7 +40,7 @@ pulseaudio noto-fonts noto-fonts-cjk ttf-font-awesome \
 neofetch ttf-nerd-fonts-symbols  powerline-fonts \
 python-psutil python-pip wget playerctl neovim-git \
 crda  ranger ueberzug atool ripgrep fzf \
-uctags-git nodejs-lts-fermium yarn jq gitui \
+uctags-git nodejs-lts-fermium jq gitui \
 pamixer lsb_release ncmpcpp bat neovim ripgrep sed ufw \
 
 chsh -s $(which zsh)
@@ -53,24 +59,56 @@ case $opt in
         thunar-archive-plugin blueman
 
         echo "Choose your WM Setup${redColour}"
-        echo "1.- [q]tile"
-        echo "2.- [i]3${endColour}"
-        read -p "" opt
+        echo "1.- qTile"
+        echo "2.- i3${endColour}"
+        read -p "Enter 1 or 2: " opt
 
         case $opt in
-            [qQ] ) 
+            1 )
                 source "$PATH_DIR/installation_folder/qtile_install.sh"
                 install_qtile $PATH_DIR $USER_HOME
-                echo "${greenColour}Installation Succesful"
-		;;
-            [iI] )
+                echo "${greenColour}Installation Successful${endColour}"
+                ;;
+            2 )
                 source "$PATH_DIR/installation_folder/i3_install.sh"
                 install_i3 $PATH_DIR $USER_HOME
-                echo "${greenColour}Installation Succesful"
-		;;
+                echo "${greenColour}Installation Successful${endColour}"
+                ;;
+            * )
+                echo "${redColour}Invalid option, skipping WM installation.${endColour}"
+                ;;
         esac
-    ;;
+
+
+echo "Would you like to optimize your system for RAM usage? (y/n)"
+read -p "" opt
+
+case $opt in
+    [yY] )
+        source "$PATH_DIR/installation_folder/ram_opt.sh"
+        echo "${greenColour}RAM optimization completed.${endColour}"
+        ;;
+    [nN] )
+        echo "Skipping RAM optimization."
+        ;;
 esac
+
+
+echo "${yellowColour}Installing AstroNvim...${endColour}"
+
+# Backup existing nvim config if it exists
+if [ -d "$USER_HOME/.config/nvim" ]; then
+    echo "Backing up existing Neovim config to nvim_backup_$(date +%s)"
+    mv "$USER_HOME/.config/nvim" "$USER_HOME/.config/nvim_backup_$(date +%s)"
+fi
+
+# Clone AstroNvim
+git clone --depth 1 https://github.com/AstroNvim/AstroNvim "$USER_HOME/.config/nvim"
+
+# Install AstroNvim plugins
+nvim --headless +PackerSync +qall
+
+echo "${greenColour}AstroNvim installation complete!${endColour}"
 
 
 git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
@@ -93,19 +131,19 @@ echo "${turquoiseColour}All common packages and config files have been installed
 pip install --user neovim
 pip install --user jedi
 
-sudo yarn add global \
+npm i -g \
   import-sort-cli \
   import-sort-parser-babylon \
   import-sort-parser-typescript \
   import-sort-style-renke 
 
-sudo systemctl enable lightdm
-sudo systemctl enable NetworkManager
-sudo systemctl enable ufw
-sudo systemctl enable tlp
-sudo systemctl enable bluetooth.service
+systemctl enable lightdm
+systemctl enable NetworkManager
+systemctl enable ufw
+systemctl enable tlp
+systemctl enable bluetooth.service
 
-sudo mkdir -p /etc/X11/xorg.conf.d && sudo tee <<'EOF' /etc/X11/xorg.conf.d/90-touchpad.conf 1> /dev/null
+mkdir -p /etc/X11/xorg.conf.d && tee <<'EOF' /etc/X11/xorg.conf.d/90-touchpad.conf 1> /dev/null
 Section "InputClass"
         Identifier "touchpad"
         MatchIsTouchpad "on"
