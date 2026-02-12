@@ -8,11 +8,12 @@ font pango:Hack, FontAwesome 13
 floating_modifier $mod
 mouse_warping output
 
-set $myTerm alacritty
+set $myTerm kitty
 bindsym $mod+Return exec $myTerm
 
 bindsym Caps_Lock exec "~/.config/scripts/keylock.sh caps"
 bindsym Num_Lock exec "~/.config/scripts/keylock.sh num"
+
 
 # start program launcher
 bindsym $mod+space exec --no-startup-id "$HOME/.config/rofi/launchers/type-2/launcher.sh"
@@ -27,8 +28,6 @@ bindsym $mod+0 exec --no-startup-id "$HOME/.config/scripts/youtube_download.sh"
 
 # Start at boot
 exec --no-startup-id "~/.config/scripts/autostart.sh i3"
-bindsym $alt+p exec flameshot screen -n 1 -c
-bindsym $alt+Shift+p exec flameshot gui
 
 # Screen brightness controls
 bindsym XF86MonBrightnessUp exec "light -A 5"
@@ -53,9 +52,7 @@ bindsym XF86AudioMute exec ~/.config/scripts/mute-scripts.sh
 
 # Start Applications
 bindsym $mod+Shift+n --release exec "killall dunst;"
-bindsym Print exec --no-startup-id xfce4-screenshooter
-bindsym Shift+Print --release exec flameshot gui
-bindsym $mod+minus --release exec flameshot gui
+bindsym Print exec --no-startup-id flameshot gui
 bindsym $mod+e --release exec "neovide --neovim-bin ~/.local/bin/lvim"
 
 focus_follows_mouse yes

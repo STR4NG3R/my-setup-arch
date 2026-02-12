@@ -1,24 +1,20 @@
 #!/bin/bash
 
 function run {
-  if ! pgrep $1 ;
-  then
-    $@&
+  if ! pgrep -x "$1" > /dev/null; then
+    "$@" &
   fi
 }
 
-#starting utility applications at boot time
-run numlockx on &
-xfsettingsd --sync &
-mpd &
-exec /usr/lib/kdeconnectd &
-nm-applet &
-blueberry-tray &
-picom &
-udiskie &
-/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
-nitrogen --restore &
-/usr/lib/geoclue-2.0/demos/agent &
-redshift &
-pgrep redshift | xargs -n1 kill -9 &
+
+# Run monitor setup script last
+~/.screenlayout/dual-monitor.sh 
+~/.config/scripts/lock.sh
+
+# Start utilities at boot
+run numlockx on
+run nm-applet
+run blueberry-tray
+run nitrogen --restore
+run xfce4-power-manager
+run udiskie

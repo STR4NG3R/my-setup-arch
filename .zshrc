@@ -1,21 +1,14 @@
-# tmux has-session -t development
-# if [ $? != 0 ]
-# then
-#   tmux new-session -s development
-# fi
-# tmux attach -t development
-# clear
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-
 plugins=(
+  colored-man-pages
+  alias-finder
   git
+  gitfast
   history
   tmux
   systemd
@@ -24,6 +17,10 @@ plugins=(
   gcloud
   compleat
   zsh-interactive-cd
+  fancy-ctrl-z
+  nmap
+  ripgrep
+  wd
 )
 
 # Preferred editor for local and remote sessions
@@ -103,16 +100,16 @@ function sshfs_withkeys() {
   sshfs ${1}@${2}:/ ${HOME}/Documents/SSHFS/  -i ${3} 
 }
 
+alias cat='bat'
 alias ls='ls --color=auto'
-alias install='yay -S --noedit'
-alias remove='yay -R --noedit'
-alias auto_clean='yay -R $(trizen -Qdtq) --noedit'
-alias update_mirrors='yay -Syy --noedit'
-alias update='yay -Syu --noedit'
-alias list_update='yay -Qu'
-alias clean_cache='yay -Scc --noedit'
-alias search='yay -Ss'
-alias yayskip='trizen -S --skipinteg --noedit'
+alias install='paru -S --noedit'
+alias remove='paru -R --noedit'
+alias auto_clean='paru -R $(trizen -Qdtq) --noedit'
+alias update_mirrors='paru -Syy --noedit'
+alias update='paru -Syu --noedit'
+alias list_update='paru -Qu'
+alias clean_cache='paru -Scc --noedit'
+alias search='paru -Ss'
 alias df='df -hT'
 alias free='free -h'
 alias gen_dep_pip='pip freeze > requierements.txt '
@@ -125,3 +122,4 @@ alias update-grub='grub-mkconfig -o /boot/grub/grub.cfg'
 
 source $ZSH/oh-my-zsh.sh
 source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+source /usr/share/nvm/init-nvm.sh

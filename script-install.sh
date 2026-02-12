@@ -28,18 +28,18 @@ pacman -Syu --noconfirm
 echo -e "${yellowColour}Installing packages... ${endColour}"
 pacman -S --noconfirm git base-devel
 
-git clone https://aur.archlinux.org/yay-bin.git
-cd "$PATH_DIR/yay-bin"
+git clone https://aur.archlinux.org/paru.git
+cd "$PATH_DIR/paru"
 makepkg -si
 
-yay -S  \
+paru -S  \
 zsh-theme-powerlevel10k zsh oh-my-zsh-git \
-python gvfs gvfs-mtp gzip alacritty-ligatures \
-networkmanager bashtop tlp tmux ufw  udisks2 \
+python gvfs gvfs-mtp gzip \
+networkmanager tlp tmux ufw  udisks2 \
 pulseaudio noto-fonts noto-fonts-cjk ttf-font-awesome \
-neofetch ttf-nerd-fonts-symbols  powerline-fonts \
-python-psutil python-pip wget playerctl neovim-git \
-crda  ranger ueberzug atool ripgrep fzf \
+ttf-jetbrains-mono neofetch ttf-nerd-fonts-symbols  powerline-fonts \
+python-psutil python-pip wget playerctl \
+crda  atool ripgrep fzf \
 uctags-git nodejs-lts-fermium jq gitui \
 pamixer lsb_release ncmpcpp bat neovim ripgrep sed ufw \
 
@@ -48,14 +48,13 @@ read -p "${turquoiseColour}Would You like install GUI? y/n " opt
 
 case $opt in 
     [yY] )
-        yay -S adapta-gtk-theme pavucontrol \
+        paru -S adapta-gtk-theme pavucontrol kitty \
         polkit polkit-gnome redshift lxappearance rofi \
         flameshot lightdm lightdm-gtk-greeter \
-        dunst feh picom-jonaburg-git blight udiskie mupdf zathura \
-        zathura-pdf-mupdfpowerlevel10k qt5ct\
+        dunst feh picom-jonaburg-git blight \
         xclip nerd-fonts-jetbrains-mono nerd-fonts-ubuntu-mono \
         nm-connection-editor arandr zathura-pdf-mupdf \
-        ttf-material-design-icons-git xfce4-settings thunar \
+        ttf-material-design-icons-git thunar \
         thunar-archive-plugin blueman
 
         echo "Choose your WM Setup${redColour}"
@@ -102,40 +101,16 @@ if [ -d "$USER_HOME/.config/nvim" ]; then
     mv "$USER_HOME/.config/nvim" "$USER_HOME/.config/nvim_backup_$(date +%s)"
 fi
 
-# Clone AstroNvim
-git clone --depth 1 https://github.com/AstroNvim/AstroNvim "$USER_HOME/.config/nvim"
 
-# Install AstroNvim plugins
-nvim --headless +PackerSync +qall
-
-echo "${greenColour}AstroNvim installation complete!${endColour}"
-
-
-git clone https://github.com/alexanderjeurissen/ranger_devicons ~/.config/ranger/plugins/ranger_devicons
-
-echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc
 
 echo "${yellowColour}Installing Common Packages${endColour}"
+
 cp -Rf "$PATH_DIR/config/*" "$USER_HOME/.config/"
 cp "$PATH_DIR/.tmux.conf" "$USER_HOME/"
 cp "$PATH_DIR/.zshrc" "$USER_HOME/"
 cp "$PATH_DIR/.bashrc" "$USER_HOME/"
 cp "$PATH_DIR/.p10k.zsh" "$USER_HOME/"
 
-curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-echo "${redColour}Remeber do :PlugInstall at start nvim${endColour}"
-sleep 3
-
-echo "${turquoiseColour}All common packages and config files have been installed"
-
-pip install --user neovim
-pip install --user jedi
-
-npm i -g \
-  import-sort-cli \
-  import-sort-parser-babylon \
-  import-sort-parser-typescript \
-  import-sort-style-renke 
 
 systemctl enable lightdm
 systemctl enable NetworkManager
@@ -151,3 +126,11 @@ Section "InputClass"
         Option "Tapping" "on"
 EndSection
 EOF
+#
+# Clone AstroNvim
+git clone --depth 1 https://github.com/AstroNvim/AstroNvim "$USER_HOME/.config/nvim"
+
+# Install AstroNvim plugins
+nvim --headless +PackerSync +qall
+
+echo "${greenColour}AstroNvim installation complete!${endColour}"
