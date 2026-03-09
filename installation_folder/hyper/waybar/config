@@ -1,0 +1,83 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 34,
+  "spacing": 8,
+
+  "modules-left": ["hyprland/workspaces"],
+  "modules-center": [],
+  "modules-right": [
+    "custom/separator",
+    "cpu",
+    "custom/calendar",
+    "custom/pulseaudio",
+    "network#wired",
+    "network#wireless",
+    "battery",
+  ],
+  "hyprland/workspaces": {
+    "on-scroll-up": "hyprctl dispatch workspace e+1",
+    "on-scroll-down": "hyprctl dispatch workspace e-1",
+    "icon": true,
+    "all-outputs": true,
+    "show-special": true,
+    "format": "{icon}",
+    "format-icons": {
+        "1": "",
+        "2": "",
+        "3": "",
+        "4": "",
+        "5": "",
+        "6": "",
+        "7": "",
+        "8": "",
+        "default": ""
+    }
+  },
+  "cpu": {
+    "interval": 2,
+    "format": " {usage}% {icon}",
+    "format-icons": ["▁","▂","▃","▄","▅","▆","▇","█"],
+    "on-click": "kitty htop"
+  },
+  "custom/calendar": {
+    "exec": "~/.config/polybar/scripts/date.sh",
+    "interval": 5,
+    "on-click": "~/.config/polybar/scripts/calendar.sh curr",
+    "on-scroll-up": "~/.config/polybar/scripts/calendar.sh next",
+    "on-scroll-down": "~/.config/polybar/scripts/calendar.sh prev"
+  },
+  "network#wired": {
+    "interface": "enp1s0f1",
+    "format": "󰀟 {ipaddr}",
+    "format-disconnected": "",
+    "on-click": "kitty nmtui"
+  },
+  "network#wireless": {
+    "interface": "wlp2s0",
+    "format-wifi": "{icon} {essid}",
+    "format-icons": ["󰤯","󰤟","󰤢","󰤨"],
+    "format-disconnected": "",
+    "on-click": "kitty nmtui"
+  },
+  "custom/pulseaudio": {
+    "exec": "~/.config/polybar/scripts/pavolume.sh --listen",
+    "return-type": "text",
+    "on-click": "pavucontrol",
+    "on-click-right": "~/.config/polybar/scripts/pavolume.sh --togmute",
+    "on-scroll-up": "pulseaudio-control --volume-max 121 up",
+    "on-scroll-down": "pulseaudio-control --volume-max 120 down"
+  },
+  "battery": {
+    "format": "{icon} {capacity}%",
+    "format-icons": ["","","","",""]
+  },
+
+  "custom/separator": {
+    "format": "  "
+  },
+
+  "tray": {
+    "spacing": 12
+  }
+}

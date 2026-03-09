@@ -18,3 +18,4 @@ run blueberry-tray
 run nitrogen --restore
 run xfce4-power-manager
 run udiskie
+run picom

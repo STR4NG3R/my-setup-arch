@@ -1,0 +1,96 @@
+* {
+  font-family:
+    "JetBrainsMono Nerd Font", "Font Awesome 6 Free", Helvetica, Arial,
+    sans-serif;
+  font-size: 13px;
+  border: none;
+}
+
+#workspaces {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 14px;
+}
+
+#workspaces button {
+  padding: 0 6px;
+}
+
+window#waybar {
+  background: rgba(30, 34, 42, 0.65);
+  /* backdrop-filter: blur(14px); */
+  border-radius: 16px;
+  margin: 6px 10px;
+  color: #abb2bf;
+}
+
+/* Workspaces cápsula glass */
+#workspaces button {
+  padding: 6px 12px;
+  margin: 0 6px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+}
+
+/* Hover animado */
+#workspaces button:hover {
+  background: rgba(173, 105, 175, 0.25);
+  /* transform: scale(1.05); */
+}
+
+/* Activo estilo macOS */
+#workspaces button.active {
+  background: rgba(173, 105, 175, 0.35);
+  box-shadow: 0 0 10px rgba(173, 105, 175, 0.6);
+}
+
+/* CPU */
+#cpu {
+  padding: 6px 14px;
+  border-radius: 14px;
+  background: rgba(0, 132, 255, 0.15);
+  transition: all 0.2s ease;
+}
+
+#cpu:hover {
+  background: rgba(0, 132, 255, 0.25);
+}
+
+/* Clock */
+#clock {
+  padding: 6px 14px;
+  border-radius: 14px;
+  background: rgba(98, 255, 0, 0.12);
+}
+
+#custom-calendar {
+  padding: 6px 14px;
+  border-radius: 14px;
+  background: rgba(98, 255, 0, 0.12);
+}
+
+/* Volume */
+#custom-pulseaudio {
+  padding: 6px 14px;
+  border-radius: 14px;
+  background: rgba(255, 0, 0, 0.15);
+}
+
+/* Network */
+#network {
+  padding: 6px 14px;
+  border-radius: 14px;
+  background: rgba(100, 100, 255, 0.12);
+}
+
+/* Battery */
+#battery {
+  padding: 6px 14px;
+  border-radius: 14px;
+  background: rgba(163, 199, 37, 0.15);
+}
+
+/* Tray */
+#tray {
+  padding-right: 12px;
+}

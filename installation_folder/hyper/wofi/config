@@ -1,0 +1,15 @@
+width=900
+height=600
+columns=6
+location=center
+show=drun
+prompt=Search…
+allow_markup=true
+always_parse_args=true
+hide_scroll=true
+columns=1
+allow_images=true
+sort_order=alphabetical
+matching=fuzzy
+
+

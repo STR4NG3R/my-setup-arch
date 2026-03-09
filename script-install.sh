@@ -35,12 +35,11 @@ makepkg -si
 paru -S  \
 zsh-theme-powerlevel10k zsh oh-my-zsh-git \
 python gvfs gvfs-mtp gzip \
-networkmanager tlp tmux ufw  udisks2 \
-pulseaudio noto-fonts noto-fonts-cjk ttf-font-awesome \
+networkmanager tmux ufw  udisks2 \
+pulseaudio ttf-hack-nerd \
 ttf-jetbrains-mono neofetch ttf-nerd-fonts-symbols  powerline-fonts \
 python-psutil python-pip wget playerctl \
-crda  atool ripgrep fzf \
-uctags-git nodejs-lts-fermium jq gitui \
+ripgrep fzf uctags-git nodejs-lts-fermium jq gitui \
 pamixer lsb_release ncmpcpp bat neovim ripgrep sed ufw \
 
 chsh -s $(which zsh)
@@ -51,16 +50,16 @@ case $opt in
         paru -S adapta-gtk-theme pavucontrol kitty \
         polkit polkit-gnome redshift lxappearance rofi \
         flameshot lightdm lightdm-gtk-greeter \
-        dunst feh picom-jonaburg-git blight \
-        xclip nerd-fonts-jetbrains-mono nerd-fonts-ubuntu-mono \
-        nm-connection-editor arandr zathura-pdf-mupdf \
+        nerd-fonts-jetbrains-mono nerd-fonts-ubuntu-mono \
+        nm-connection-editor zathura-pdf-mupdf \
         ttf-material-design-icons-git thunar \
         thunar-archive-plugin blueman
 
         echo "Choose your WM Setup${redColour}"
         echo "1.- qTile"
         echo "2.- i3${endColour}"
-        read -p "Enter 1 or 2: " opt
+        echo "3.- hyperland${endColour}"
+        read -p "Select your option " opt
 
         case $opt in
             1 )
@@ -111,7 +110,6 @@ cp "$PATH_DIR/.zshrc" "$USER_HOME/"
 cp "$PATH_DIR/.bashrc" "$USER_HOME/"
 cp "$PATH_DIR/.p10k.zsh" "$USER_HOME/"
 
-
 systemctl enable lightdm
 systemctl enable NetworkManager
 systemctl enable ufw
@@ -126,7 +124,7 @@ Section "InputClass"
         Option "Tapping" "on"
 EndSection
 EOF
-#
+
 # Clone AstroNvim
 git clone --depth 1 https://github.com/AstroNvim/AstroNvim "$USER_HOME/.config/nvim"
 
