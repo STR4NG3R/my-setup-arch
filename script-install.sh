@@ -48,12 +48,9 @@ read -p "${turquoiseColour}Would You like install GUI? y/n " opt
 case $opt in 
     [yY] )
         paru -S adapta-gtk-theme pavucontrol kitty \
-        polkit polkit-gnome redshift lxappearance rofi \
-        flameshot lightdm lightdm-gtk-greeter \
         nerd-fonts-jetbrains-mono nerd-fonts-ubuntu-mono \
-        nm-connection-editor zathura-pdf-mupdf \
-        ttf-material-design-icons-git thunar \
-        thunar-archive-plugin blueman
+        nm-connection-editor ttf-material-design-icons-git thunar \
+        thunar-archive-plugin blueman pulseaudio-control
 
         echo "Choose your WM Setup${redColour}"
         echo "1.- qTile"
