@@ -1,124 +1,159 @@
 #!/usr/bin/env bash
+# ═══════════════════════════════════════════════════════════════
+# pavolume.sh — control de volumen (PipeWire/PulseAudio vía pactl)
+# para Waybar + notificaciones OSD (notify-send, compatible swaync).
+#
+# Uso:
+#   pavolume.sh --up        sube el volumen
+#   pavolume.sh --down      baja el volumen
+#   pavolume.sh --togmute   alterna silencio
+#   pavolume.sh --listen    emite JSON para Waybar y escucha cambios
+#   pavolume.sh             imprime el volumen actual (texto simple)
+# ═══════════════════════════════════════════════════════════════
 
 # --- Configuración ---
-INC=1
-MAX_VOL=120
-CAP_VOL="no"
-AUTOSYNC="yes"
-DUNST_ID=25932 # ID único para que la notificación se reemplace a sí misma
+INC=1          # incremento por paso (%)
+MAX_VOL=120    # volumen máximo permitido (%)
+CAP_VOL="no"   # "yes" para limitar a 100%
+AUTOSYNC="yes" # sincronizar el volumen de los sink-inputs con el sink
 
+# ── Helpers ────────────────────────────────────────────────────
 get_active_sink() {
     pactl get-default-sink
 }
 
+# Volumen actual (entero). Acepta el sink como argumento para evitar
+# re-consultar el sink por defecto en cada llamada.
 get_cur_vol() {
-    pactl get-sink-volume "$(get_active_sink)" | awk -F '/' '{print $2}' | tr -d ' %' | head -n1
+    local sink="${1:-$(get_active_sink)}"
+    pactl get-sink-volume "$sink" | awk -F '/' '{gsub(/[ %]/,"",$2); print $2; exit}'
 }
 
-# --- Función de Notificación con Dunstify ---
+is_muted() {
+    local sink="${1:-$(get_active_sink)}"
+    [[ "$(pactl get-sink-mute "$sink")" == *"yes"* ]]
+}
+
+# Escapa una cadena para incrustarla en un string JSON.
+json_escape() {
+    local s="$1"
+    s="${s//\\/\\\\}"  # backslash
+    s="${s//\"/\\\"}"  # comillas
+    printf '%s' "$s"
+}
+
+# ── Notificación OSD ───────────────────────────────────────────
 show_osd() {
     local vol=$1
     local muted=$2
-    local icon="audio-volume-high"
-    local bar_val=$vol
+    local icon msg bar_val=$vol
 
     if [[ "$muted" == "1" || "$vol" == "0" ]]; then
         icon="audio-volume-muted"
         msg="Muted"
         bar_val=0
+    elif [[ "$vol" -lt 33 ]]; then
+        icon="audio-volume-low"
+        msg="Volumen: ${vol}%"
+    elif [[ "$vol" -lt 66 ]]; then
+        icon="audio-volume-medium"
+        msg="Volumen: ${vol}%"
     else
-        [[ "$vol" -lt 33 ]] && icon="audio-volume-low"
-        [[ "$vol" -lt 66 && "$vol" -ge 33 ]] && icon="audio-volume-medium"
+        icon="audio-volume-high"
         msg="Volumen: ${vol}%"
     fi
 
-    # notify-send con hint de progreso (barra) y sincronización para
-    # reemplazar la notificación anterior. Compatible con swaync/mako/dunst.
+    # Hint de progreso (barra) + sincronización para reemplazar la
+    # notificación anterior. Compatible con swaync/mako/dunst.
     notify-send -a "Volume" \
-         -u low \
-         -i "$icon" \
-         -h "int:value:$bar_val" \
-         -h "string:x-canonical-private-synchronous:volume" \
-         -h "string:synchronous:volume" \
-         "$msg"
+        -u low \
+        -i "$icon" \
+        -h "int:value:$bar_val" \
+        -h "string:x-canonical-private-synchronous:volume" \
+        -h "string:synchronous:volume" \
+        "$msg"
 }
 
+# Sincroniza el volumen de los sink-inputs activos con el del sink.
 vol_sync() {
-    local active_sink=$(get_active_sink)
-    local cur_vol=$(get_cur_vol)
-    pactl list sink-inputs short | awk -v sink="$active_sink" '$3 == sink {print $1}' | while read -r id; do
+    local sink="$1" cur_vol="$2" id
+    pactl list sink-inputs short | awk -v s="$sink" '$3 == s {print $1}' | while read -r id; do
         pactl set-sink-input-volume "$id" "${cur_vol}%"
     done
 }
 
+# ── Main ───────────────────────────────────────────────────────
 case "$1" in
     --up)
-        ACTIVE=$(get_active_sink)
-        CUR=$(get_cur_vol)
-        if [[ "$CAP_VOL" == "yes" && "$CUR" -ge 100 ]]; then
-            pactl set-sink-volume "$ACTIVE" 100%
-        elif [[ "$((CUR + INC))" -gt "$MAX_VOL" ]]; then
-            pactl set-sink-volume "$ACTIVE" "$MAX_VOL%"
+        sink=$(get_active_sink)
+        cur=$(get_cur_vol "$sink")
+        if [[ "$CAP_VOL" == "yes" && "$cur" -ge 100 ]]; then
+            pactl set-sink-volume "$sink" 100%
+        elif [[ "$((cur + INC))" -gt "$MAX_VOL" ]]; then
+            pactl set-sink-volume "$sink" "$MAX_VOL%"
         else
-            pactl set-sink-volume "$ACTIVE" "+$INC%"
+            pactl set-sink-volume "$sink" "+$INC%"
         fi
-        [[ "$AUTOSYNC" == "yes" ]] && vol_sync
-        show_osd "$(get_cur_vol)" 0
+        new_vol=$(get_cur_vol "$sink")
+        [[ "$AUTOSYNC" == "yes" ]] && vol_sync "$sink" "$new_vol"
+        show_osd "$new_vol" 0
         ;;
 
     --down)
-        pactl set-sink-volume "$(get_active_sink)" "-$INC%"
-        [[ "$AUTOSYNC" == "yes" ]] && vol_sync
-        show_osd "$(get_cur_vol)" 0
+        sink=$(get_active_sink)
+        pactl set-sink-volume "$sink" "-$INC%"
+        new_vol=$(get_cur_vol "$sink")
+        [[ "$AUTOSYNC" == "yes" ]] && vol_sync "$sink" "$new_vol"
+        show_osd "$new_vol" 0
         ;;
 
     --togmute)
-        ACTIVE=$(get_active_sink)
-        pactl set-sink-mute "$ACTIVE" toggle
-        MUTED=$(pactl get-sink-mute "$ACTIVE" | grep -q "yes" && echo 1 || echo 0)
-        show_osd "$(get_cur_vol)" "$MUTED"
+        sink=$(get_active_sink)
+        pactl set-sink-mute "$sink" toggle
+        if is_muted "$sink"; then muted=1; else muted=0; fi
+        show_osd "$(get_cur_vol "$sink")" "$muted"
         ;;
-    --listen)
-        # 1. Función interna para imprimir el estado actual en formato JSON (mejor para Waybar)
-        print_vol() {
-            local sink=$(get_active_sink)
-            local vol=$(get_cur_vol)
-            local mute_status=$(pactl get-sink-mute "$sink")
 
-            # Nombre legible del dispositivo y puerto activo
-            local desc=$(pactl list sinks | awk -v s="$sink" '
-                /^Sink #/ {cur=0}
-                $1=="Name:" && $2==s {cur=1}
-                cur && /Description:/ {sub(/^[[:space:]]*Description:[[:space:]]*/,""); print; exit}')
-            local port=$(pactl list sinks | awk -v s="$sink" '
-                /^Sink #/ {cur=0}
-                $1=="Name:" && $2==s {cur=1}
-                cur && /Active Port:/ {sub(/^[[:space:]]*Active Port:[[:space:]]*/,""); print; exit}')
+    --listen)
+        # Emite el estado actual en JSON para Waybar.
+        print_vol() {
+            local sink vol desc port tip
+            sink=$(get_active_sink)
+            vol=$(get_cur_vol "$sink")
+
+            # Descripción y puerto activo en una sola pasada de pactl.
+            {
+                read -r desc
+                read -r port
+            } < <(pactl list sinks | awk -v s="$sink" '
+                /^Sink #/        { cur = 0 }
+                $1 == "Name:" && $2 == s { cur = 1 }
+                cur && /Description:/ { sub(/^[[:space:]]*Description:[[:space:]]*/, ""); d = $0 }
+                cur && /Active Port:/ { sub(/^[[:space:]]*Active Port:[[:space:]]*/, ""); p = $0 }
+                END { print d; print p }')
             [[ -z "$desc" ]] && desc="$sink"
 
-            if [[ "$mute_status" == *"yes"* ]]; then
-                local tip="Dispositivo: ${desc}\\nPuerto: ${port}\\nVolumen: ${vol}% (silenciado)"
-                # Salida JSON para que Waybar pueda aplicar estilos CSS (.muted)
+            desc=$(json_escape "$desc")
+            port=$(json_escape "$port")
+
+            if is_muted "$sink"; then
+                tip="Dispositivo: ${desc}\\nPuerto: ${port}\\nVolumen: ${vol}% (silenciado)"
                 echo "{\"text\": \"󰝟 \", \"class\": \"muted\", \"percentage\": $vol, \"tooltip\": \"$tip\"}"
             else
-                local tip="Dispositivo: ${desc}\\nPuerto: ${port}\\nVolumen: ${vol}%"
+                tip="Dispositivo: ${desc}\\nPuerto: ${port}\\nVolumen: ${vol}%"
                 echo "{\"text\": \"󰕾 $vol%\", \"class\": \"active\", \"percentage\": $vol, \"tooltip\": \"$tip\"}"
             fi
         }
 
-        # 2. Imprimir estado inicial
         print_vol
 
-        # 3. Suscribirse a eventos con manejo de errores
-        # Usamos stdbuf para evitar que los datos se queden trabados en el buffer
+        # Reemitir en cada evento de sink. stdbuf evita el buffering.
         pactl subscribe | stdbuf -oL grep --line-buffered "sink" | while read -r _; do
-            if ! print_vol; then
-                break # Si hay un Broken Pipe, salimos del ciclo limpiamente
-            fi
+            print_vol || break
         done
         ;;
+
     *)
-        VOL=$(get_cur_vol)
-        pactl get-sink-mute "$(get_active_sink)" | grep -q "yes" && echo " $VOL%" || echo " $VOL%"
+        echo " $(get_cur_vol)%"
         ;;
 esac
