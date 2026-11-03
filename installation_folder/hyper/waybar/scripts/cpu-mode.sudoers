@@ -1,0 +1,5 @@
+# Permite a str4ng3r cambiar el modo de CPU (governor/turbo/RAPL) sin
+# contraseña, únicamente a través del helper de ruta fija
+# /usr/local/bin/cpu-mode-set. Esto NO concede sudo general: solo ese
+# binario con los argumentos permitidos.
+str4ng3r ALL=(root) NOPASSWD: /usr/local/bin/cpu-mode-set next, /usr/local/bin/cpu-mode-set ahorro, /usr/local/bin/cpu-mode-set normal, /usr/local/bin/cpu-mode-set extreme

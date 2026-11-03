@@ -1,0 +1,123 @@
+#!/usr/bin/env bash
+# ──────────────────────────────────────────────────────────────
+# cpu-mode-set  —  helper PRIVILEGIADO (se ejecuta vía sudo NOPASSWD)
+# Optimizado para Intel i5-8250U (Kaby Lake R, intel_pstate en modo HWP)
+# en un Acer Aspire A315-53.
+#
+# 3 modos cíclicos:
+#   ahorro   -> mínimo consumo/calor   (🔋)
+#   normal   -> equilibrado            (⚡)
+#   extreme  -> máximo rendimiento     (🔥)
+#
+# Ajusta de forma coordinada:
+#   • scaling_governor               (performance / powersave)
+#   • intel_pstate/no_turbo          (turbo on/off)
+#   • energy_performance_preference  (EPP)
+#   • intel_pstate/max_perf_pct      (techo de rendimiento %)
+#   • RAPL PL1/PL2                   (límite de potencia del paquete)
+#
+# El estado "actual" se persiste en STATE_FILE porque, con intel_pstate
+# en modo HWP, el governor por sí solo no basta para distinguir 3 modos.
+#
+# Instalación (como root):
+#   install -o root -g root -m 755 cpu-mode-set /usr/local/bin/cpu-mode-set
+#
+# Uso:
+#   sudo /usr/local/bin/cpu-mode-set next        # cicla ahorro->normal->extreme->ahorro
+#   sudo /usr/local/bin/cpu-mode-set ahorro
+#   sudo /usr/local/bin/cpu-mode-set normal
+#   sudo /usr/local/bin/cpu-mode-set extreme
+# ──────────────────────────────────────────────────────────────
+set -euo pipefail
+
+CPU_PATH="/sys/devices/system/cpu"
+GOV_GLOB="$CPU_PATH"/cpu[0-9]*/cpufreq/scaling_governor
+EPP_GLOB="$CPU_PATH"/cpu[0-9]*/cpufreq/energy_performance_preference
+TURBO_FILE="$CPU_PATH/intel_pstate/no_turbo"
+MINPCT_FILE="$CPU_PATH/intel_pstate/min_perf_pct"
+MAXPCT_FILE="$CPU_PATH/intel_pstate/max_perf_pct"
+
+# RAPL (límite de potencia del paquete). PL1 = sostenido, PL2 = ráfaga.
+RAPL="/sys/class/powercap/intel-rapl:0"
+PL1_FILE="$RAPL/constraint_0_power_limit_uw"   # long_term
+PL2_FILE="$RAPL/constraint_1_power_limit_uw"   # short_term
+
+# Fichero de estado (quién es el modo actual). Ruta estable del sistema.
+STATE_FILE="/run/cpu-mode.state"
+
+# Escribe un valor en todos los ficheros que casen con un glob, si existen
+# y son escribibles. Silencioso ante los que no (p.ej. EPP ausente).
+write_all() {
+    local value="$1"; shift
+    local f
+    for f in "$@"; do
+        [ -w "$f" ] && echo "$value" > "$f" 2>/dev/null || true
+    done
+}
+
+write_one() {
+    local value="$1" file="$2"
+    [ -w "$file" ] && echo "$value" > "$file" 2>/dev/null || true
+}
+
+set_mode() {
+    local mode="$1"
+    case "$mode" in
+        ahorro)
+            # Mínimo consumo/calor: governor powersave, turbo OFF,
+            # EPP power, techo recortado y PL1 bajo. Ideal con batería
+            # o para que el A315-53 se mantenga frío y silencioso.
+            write_all powersave $GOV_GLOB
+            write_one 1  "$TURBO_FILE"
+            write_one 20 "$MINPCT_FILE"
+            write_one 55 "$MAXPCT_FILE"
+            write_all power $EPP_GLOB
+            write_one 10000000 "$PL1_FILE"   # 10W sostenido
+            write_one 15000000 "$PL2_FILE"   # 15W ráfaga
+            ;;
+        normal)
+            # Equilibrado: powersave + turbo ON + EPP balance_performance.
+            # Responde rápido sin disparar el consumo de forma sostenida.
+            # Deja los límites de fábrica (PL1 15W / PL2 44W).
+            write_all powersave $GOV_GLOB
+            write_one 0   "$TURBO_FILE"
+            write_one 10  "$MINPCT_FILE"
+            write_one 100 "$MAXPCT_FILE"
+            write_all balance_performance $EPP_GLOB
+            write_one 15000000 "$PL1_FILE"   # 15W (fábrica)
+            write_one 44000000 "$PL2_FILE"   # 44W (fábrica)
+            ;;
+        extreme)
+            # Máximo rendimiento: governor performance, turbo ON,
+            # EPP performance, techo 100% y PL1 ELEVADO para que la CPU
+            # sostenga frecuencias altas más tiempo antes de throttlear.
+            # OJO: el límite real sigue siendo térmico (ventilador).
+            write_all performance $GOV_GLOB
+            write_one 0   "$TURBO_FILE"
+            write_one 20  "$MINPCT_FILE"
+            write_one 100 "$MAXPCT_FILE"
+            write_all performance $EPP_GLOB
+            write_one 25000000 "$PL1_FILE"   # 25W sostenido (sube desde 15W)
+            write_one 44000000 "$PL2_FILE"   # 44W ráfaga
+            ;;
+        *)
+            echo "modo inválido: $mode (usa ahorro|normal|extreme|next)" >&2
+            exit 1
+            ;;
+    esac
+    echo "$mode" > "$STATE_FILE" 2>/dev/null || true
+}
+
+action="${1:-next}"
+
+if [ "$action" = "next" ]; then
+    cur="$(cat "$STATE_FILE" 2>/dev/null || echo ahorro)"
+    case "$cur" in
+        ahorro)  set_mode normal  ;;
+        normal)  set_mode extreme ;;
+        extreme) set_mode ahorro  ;;
+        *)       set_mode normal  ;;
+    esac
+else
+    set_mode "$action"
+fi

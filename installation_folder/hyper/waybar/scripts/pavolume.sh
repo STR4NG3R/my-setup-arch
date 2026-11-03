@@ -1,194 +1,124 @@
 #!/usr/bin/env bash
 
-# finds the active sink for pulse audio and increments the volume. useful when you have multiple audio outputs and have a key bound to vol-up and down
+# --- Configuración ---
+INC=1
+MAX_VOL=120
+CAP_VOL="no"
+AUTOSYNC="yes"
+DUNST_ID=25932 # ID único para que la notificación se reemplace a sí misma
 
-osd='no'
-inc='2'
-capvol='no'
-maxvol='200'
-autosync='yes'
-
-# Muted status
-# yes: muted
-# no : not muted
-curStatus="no"
-active_sink=""
-limit=$((100 - inc))
-maxlimit=$((maxvol - inc))
-
-reloadSink() {
-    active_sink=$(pacmd list-sinks | awk '/* index:/{print $3}')
+get_active_sink() {
+    pactl get-default-sink
 }
 
-function volUp {
-
-    getCurVol
-
-    if [ "$capvol" = 'yes' ]
-    then
-        if [ "$curVol" -le 100 ] && [ "$curVol" -ge "$limit" ]
-        then
-            pactl set-sink-volume "$active_sink" -- 100%
-        elif [ "$curVol" -lt "$limit" ]
-        then
-            pactl set-sink-volume "$active_sink" -- "+$inc%"
-        fi
-    elif [ "$curVol" -le "$maxvol" ] && [ "$curVol" -ge "$maxlimit" ]
-    then
-        pactl set-sink-volume "$active_sink" "$maxvol%"
-    elif [ "$curVol" -lt "$maxlimit" ]
-    then
-        pactl set-sink-volume "$active_sink" "+$inc%"
-    fi
-
-    getCurVol
-
-    if [ ${osd} = 'yes' ]
-    then
-        qdbus org.kde.kded /modules/kosd showVolume "$curVol" 0
-    fi
-
-    if [ ${autosync} = 'yes' ]
-    then
-        volSync
-    fi
+get_cur_vol() {
+    pactl get-sink-volume "$(get_active_sink)" | awk -F '/' '{print $2}' | tr -d ' %' | head -n1
 }
 
-function volDown {
+# --- Función de Notificación con Dunstify ---
+show_osd() {
+    local vol=$1
+    local muted=$2
+    local icon="audio-volume-high"
+    local bar_val=$vol
 
-    pactl set-sink-volume "$active_sink" "-$inc%"
-    getCurVol
-
-    if [ ${osd} = 'yes' ]
-    then
-        qdbus org.kde.kded /modules/kosd showVolume "$curVol" 0
+    if [[ "$muted" == "1" || "$vol" == "0" ]]; then
+        icon="audio-volume-muted"
+        msg="Muted"
+        bar_val=0
+    else
+        [[ "$vol" -lt 33 ]] && icon="audio-volume-low"
+        [[ "$vol" -lt 66 && "$vol" -ge 33 ]] && icon="audio-volume-medium"
+        msg="Volumen: ${vol}%"
     fi
 
-    if [ ${autosync} = 'yes' ]
-    then
-        volSync
-    fi
-
+    # notify-send con hint de progreso (barra) y sincronización para
+    # reemplazar la notificación anterior. Compatible con swaync/mako/dunst.
+    notify-send -a "Volume" \
+         -u low \
+         -i "$icon" \
+         -h "int:value:$bar_val" \
+         -h "string:x-canonical-private-synchronous:volume" \
+         -h "string:synchronous:volume" \
+         "$msg"
 }
 
-function getSinkInputs {
-    input_array=$(pacmd list-sink-inputs | grep -B 4 "sink: $1 " | awk '/index:/{print $2}')
-}
-
-function volSync {
-    getSinkInputs "$active_sink"
-    getCurVol
-
-    for each in $input_array
-    do
-        pactl set-sink-input-volume "$each" "$curVol%"
+vol_sync() {
+    local active_sink=$(get_active_sink)
+    local cur_vol=$(get_cur_vol)
+    pactl list sink-inputs short | awk -v sink="$active_sink" '$3 == sink {print $1}' | while read -r id; do
+        pactl set-sink-input-volume "$id" "${cur_vol}%"
     done
 }
 
-function getCurVol {
-    curVol=$(pacmd list-sinks | grep -A 15 "index: $active_sink$" | grep 'volume:' | grep -E -v 'base volume:' | awk -F : '{print $3}' | grep -o -P '.{0,3}%'| sed s/.$// | tr -d ' ')
-}
-
-function volMute {
-    case "$1" in
-        mute)
-            pactl set-sink-mute "$active_sink" 1
-            curVol=0
-            status=1
-            ;;
-        unmute)
-            pactl set-sink-mute "$active_sink" 0
-            getCurVol
-            status=0
-            ;;
-    esac
-
-    if [ ${osd} = 'yes' ]
-    then
-        qdbus org.kde.kded /modules/kosd showVolume ${curVol} ${status}
-    fi
-
-}
-
-function volMuteStatus {
-    curStatus=$(pacmd list-sinks | grep -A 15 "index: $active_sink$" | awk '/muted/{ print $2}')
-}
-
-# Prints output for bar
-# Listens for events for fast update speed
-function listen {
-    firstrun=0
-
-    pactl subscribe 2>/dev/null | {
-        while true; do
-            {
-                # If this is the first time just continue
-                # and print the current state
-                # Otherwise wait for events
-                # This is to prevent the module being empty until
-                # an event occurs
-                if [ $firstrun -eq 0 ]
-                then
-                    firstrun=1
-                else
-                    read -r event || break
-                    if ! echo "$event" | grep -e "on card" -e "on sink"
-                    then
-                        # Avoid double events
-                        continue
-                    fi
-                fi
-            } &>/dev/null
-            output
-        done
-    }
-}
-
-function output() {
-    reloadSink
-    getCurVol
-    volMuteStatus
-    if [ "${curStatus}" = 'yes' ]
-    then
-        echo " $curVol% "
-    else
-        echo " $curVol% "
-    fi
-} #}}}
-
-reloadSink
 case "$1" in
     --up)
-        volUp
-        ;;
-    --down)
-        volDown
-        ;;
-    --togmute)
-        volMuteStatus
-        if [ "$curStatus" = 'yes' ]
-        then
-            volMute unmute
+        ACTIVE=$(get_active_sink)
+        CUR=$(get_cur_vol)
+        if [[ "$CAP_VOL" == "yes" && "$CUR" -ge 100 ]]; then
+            pactl set-sink-volume "$ACTIVE" 100%
+        elif [[ "$((CUR + INC))" -gt "$MAX_VOL" ]]; then
+            pactl set-sink-volume "$ACTIVE" "$MAX_VOL%"
         else
-            volMute mute
+            pactl set-sink-volume "$ACTIVE" "+$INC%"
         fi
+        [[ "$AUTOSYNC" == "yes" ]] && vol_sync
+        show_osd "$(get_cur_vol)" 0
         ;;
-    --mute)
-        volMute mute
+
+    --down)
+        pactl set-sink-volume "$(get_active_sink)" "-$INC%"
+        [[ "$AUTOSYNC" == "yes" ]] && vol_sync
+        show_osd "$(get_cur_vol)" 0
         ;;
-    --unmute)
-        volMute unmute
-        ;;
-    --sync)
-        volSync
+
+    --togmute)
+        ACTIVE=$(get_active_sink)
+        pactl set-sink-mute "$ACTIVE" toggle
+        MUTED=$(pactl get-sink-mute "$ACTIVE" | grep -q "yes" && echo 1 || echo 0)
+        show_osd "$(get_cur_vol)" "$MUTED"
         ;;
     --listen)
-        # Listen for changes and immediately create new output for the bar
-        # This is faster than having the script on an interval
-        listen
+        # 1. Función interna para imprimir el estado actual en formato JSON (mejor para Waybar)
+        print_vol() {
+            local sink=$(get_active_sink)
+            local vol=$(get_cur_vol)
+            local mute_status=$(pactl get-sink-mute "$sink")
+
+            # Nombre legible del dispositivo y puerto activo
+            local desc=$(pactl list sinks | awk -v s="$sink" '
+                /^Sink #/ {cur=0}
+                $1=="Name:" && $2==s {cur=1}
+                cur && /Description:/ {sub(/^[[:space:]]*Description:[[:space:]]*/,""); print; exit}')
+            local port=$(pactl list sinks | awk -v s="$sink" '
+                /^Sink #/ {cur=0}
+                $1=="Name:" && $2==s {cur=1}
+                cur && /Active Port:/ {sub(/^[[:space:]]*Active Port:[[:space:]]*/,""); print; exit}')
+            [[ -z "$desc" ]] && desc="$sink"
+
+            if [[ "$mute_status" == *"yes"* ]]; then
+                local tip="Dispositivo: ${desc}\\nPuerto: ${port}\\nVolumen: ${vol}% (silenciado)"
+                # Salida JSON para que Waybar pueda aplicar estilos CSS (.muted)
+                echo "{\"text\": \"󰝟 \", \"class\": \"muted\", \"percentage\": $vol, \"tooltip\": \"$tip\"}"
+            else
+                local tip="Dispositivo: ${desc}\\nPuerto: ${port}\\nVolumen: ${vol}%"
+                echo "{\"text\": \"󰕾 $vol%\", \"class\": \"active\", \"percentage\": $vol, \"tooltip\": \"$tip\"}"
+            fi
+        }
+
+        # 2. Imprimir estado inicial
+        print_vol
+
+        # 3. Suscribirse a eventos con manejo de errores
+        # Usamos stdbuf para evitar que los datos se queden trabados en el buffer
+        pactl subscribe | stdbuf -oL grep --line-buffered "sink" | while read -r _; do
+            if ! print_vol; then
+                break # Si hay un Broken Pipe, salimos del ciclo limpiamente
+            fi
+        done
         ;;
     *)
-        # By default print output for bar
-        output
+        VOL=$(get_cur_vol)
+        pactl get-sink-mute "$(get_active_sink)" | grep -q "yes" && echo " $VOL%" || echo " $VOL%"
         ;;
 esac
