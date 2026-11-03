@@ -1,203 +1,184 @@
 #!/usr/bin/env bash
+# ═══════════════════════════════════════════════════════════════
+# script-install.sh — post-installation setup for Arch-based distros.
+#
+# Two phases:
+#   • ROOT phase : microcode, GPU drivers, Bluetooth, base packages.
+#   • USER phase : AUR helper (paru), CLI tools, GUI + Hyprland, configs.
+#
+# The script re-execs itself as the invoking user for the USER phase.
+# ═══════════════════════════════════════════════════════════════
 set -euo pipefail
 
 PATH_DIR=$(dirname "$(readlink -f "$0")")
 
-greenColour="\e[0;32m\033[1m"
-endColour="\033[0m\e[0m"
-redColour="\e[0;31m\033[1m"
-yellowColour="\e[0;33m\033[1m"
-turquoiseColour="\e[0;36m\033[1m"
+# ── Logging helpers ────────────────────────────────────────────
+c_green="\e[0;32m\033[1m"
+c_red="\e[0;31m\033[1m"
+c_yellow="\e[0;33m\033[1m"
+c_cyan="\e[0;36m\033[1m"
+c_end="\033[0m\e[0m"
 
+info()  { echo -e "${c_yellow}==> $*${c_end}"; }
+ok()    { echo -e "${c_green}==> $*${c_end}"; }
+err()   { echo -e "${c_red}==> $*${c_end}" >&2; }
+ask()   { read -r -p "$(echo -e "${c_cyan}$* ${c_end}")" REPLY; }
+
+# Install packages with pacman (root phase), idempotent.
+pac() { pacman -S --noconfirm --needed "$@"; }
+
+# ── Root-phase installers ──────────────────────────────────────
 install_cpu_microcode() {
-  CPU_VENDOR=$(lscpu | grep "Vendor ID")
+  local vendor
+  vendor=$(lscpu | grep "Vendor ID" || true)
 
-  if echo "$CPU_VENDOR" | grep -qi "intel"; then
-    echo "Installing Intel microcode..."
-    pacman -S --noconfirm --needed intel-ucode
-  elif echo "$CPU_VENDOR" | grep -qi "amd"; then
-    echo "Installing AMD microcode..."
-    pacman -S --noconfirm --needed amd-ucode
+  if echo "$vendor" | grep -qi "intel"; then
+    info "Installing Intel microcode..."
+    pac intel-ucode
+  elif echo "$vendor" | grep -qi "amd"; then
+    info "Installing AMD microcode..."
+    pac amd-ucode
   fi
 }
 
 install_gpu_drivers() {
-
-  echo "Detecting GPU..."
-  GPU_INFO=$(lspci | grep -E "VGA|3D")
-
+  info "Detecting GPU..."
+  local gpu
+  gpu=$(lspci | grep -E "VGA|3D" || true)
   echo "GPU detected:"
-  echo "$GPU_INFO"
+  echo "$gpu"
 
-  # ---------- NVIDIA ----------
-  if echo "$GPU_INFO" | grep -qi "nvidia"; then
-
-    if echo "$GPU_INFO" | grep -qi "intel"; then
-      echo "Hybrid GPU detected (Optimus)"
-
-      pacman -S --noconfirm --needed \
-        nvidia nvidia-utils nvidia-prime \
-        lib32-nvidia-utils
-
-      # opción más moderna
-      pacman -S --noconfirm --needed switcheroo-control
+  if echo "$gpu" | grep -qi "nvidia"; then
+    if echo "$gpu" | grep -qi "intel"; then
+      info "Hybrid GPU detected (Optimus)"
+      pac nvidia nvidia-utils nvidia-prime lib32-nvidia-utils
+      pac switcheroo-control
       systemctl enable --now switcheroo-control
-
     else
-      echo "Installing NVIDIA drivers..."
-
-      pacman -S --noconfirm --needed \
-        nvidia nvidia-utils \
-        lib32-nvidia-utils
+      info "Installing NVIDIA drivers..."
+      pac nvidia nvidia-utils lib32-nvidia-utils
     fi
-
-  # ---------- AMD ----------
-  elif echo "$GPU_INFO" | grep -qi "amd\|ati"; then
-    echo "Installing AMD drivers..."
-
-    pacman -S --noconfirm --needed \
-      mesa vulkan-radeon lib32-vulkan-radeon
-
-  # ---------- Intel ----------
-  elif echo "$GPU_INFO" | grep -qi "intel"; then
-    echo "Installing Intel drivers..."
-
-    pacman -S --noconfirm --needed \
-      mesa vulkan-intel lib32-vulkan-intel
-
-  # ---------- Fallback ----------
+  elif echo "$gpu" | grep -qi "amd\|ati"; then
+    info "Installing AMD drivers..."
+    pac mesa vulkan-radeon lib32-vulkan-radeon
+  elif echo "$gpu" | grep -qi "intel"; then
+    info "Installing Intel drivers..."
+    pac mesa vulkan-intel lib32-vulkan-intel
   else
-    echo "Unknown GPU, installing generic drivers..."
-
-    pacman -S --noconfirm --needed mesa
+    info "Unknown GPU, installing generic drivers..."
+    pac mesa
   fi
 }
 
-
 install_bluetooth() {
-  echo "Detecting Bluetooth hardware..."
-
+  info "Detecting Bluetooth hardware..."
   if dmesg | grep -qi bluetooth; then
-    echo "Bluetooth detected. Installing stack..."
-
-    pacman -S --noconfirm --needed \
-      bluez bluez-utils blueman
-
+    info "Bluetooth detected. Installing stack..."
+    pac bluez bluez-utils blueman
     systemctl enable --now bluetooth.service
 
-    # opcional: habilitar auto power-on
     mkdir -p /etc/bluetooth
-    cat > /etc/bluetooth/main.conf <<EOF
+    cat > /etc/bluetooth/main.conf <<'EOF'
 [Policy]
 AutoEnable=true
 EOF
-
     systemctl restart bluetooth.service
-
-    echo "Bluetooth enabled ✔"
+    ok "Bluetooth enabled"
   else
-    echo "No Bluetooth hardware detected, skipping..."
+    info "No Bluetooth hardware detected, skipping..."
   fi
 }
 
-
-# ---------------- ROOT PHASE ----------------
+# ═══════════════════════ ROOT PHASE ═══════════════════════════
 if [[ $EUID -eq 0 && "${1:-}" != "--user" ]]; then
-  echo -e "${greenColour}Installation Begin (ROOT)...${endColour}"
+  ok "Installation begin (ROOT)..."
 
-  USER_NAME="$SUDO_USER"
-  USER_HOME=$(eval echo ~"$USER_NAME")
+  USER_NAME="${SUDO_USER:?Run this script with sudo, not as the root user directly}"
 
   pacman -Syu --noconfirm
 
-  install_cpu_microcode 
+  install_cpu_microcode
   install_gpu_drivers
   install_bluetooth
 
-  echo -e "${yellowColour}Installing base packages...${endColour}"
-  pacman -S --noconfirm --needed \
-    git base-devel networkmanager udisks2 \
-    curl fish \
-    pipewire wireplumber pipewire-pulse pipewire-jack pipewire-audio
+  info "Installing base packages..."
+  pac git base-devel networkmanager udisks2 curl fish \
+      pipewire wireplumber pipewire-pulse pipewire-jack pipewire-audio
 
   systemctl enable --now NetworkManager
 
-
-  # 👉 pasar a fase usuario
-  exec sudo -u "$USER_NAME" -H "$0" --user
+  # Hand off to the user phase, forwarding the target user.
+  exec sudo -u "$USER_NAME" -H KIRO_TARGET_USER="$USER_NAME" "$0" --user
 fi
 
-# ---------------- USER PHASE ----------------
+# ═══════════════════════ USER PHASE ═══════════════════════════
 if [[ "${1:-}" == "--user" ]]; then
-  echo -e "${greenColour}User setup...${endColour}"
+  ok "User setup..."
 
+  USER_NAME="${KIRO_TARGET_USER:-$USER}"
   USER_HOME="$HOME"
 
-  # -------- paru --------
+  # -------- paru (AUR helper) --------
   if ! command -v paru &>/dev/null; then
-    git clone https://aur.archlinux.org/paru.git "$HOME/paru"
-    cd "$HOME/paru"
-    makepkg -si --noconfirm || exit 1
+    info "Bootstrapping paru..."
+    tmp_paru=$(mktemp -d)
+    git clone https://aur.archlinux.org/paru.git "$tmp_paru"
+    ( cd "$tmp_paru" && makepkg -si --noconfirm )
+    rm -rf "$tmp_paru"
   fi
 
-  echo -e "${yellowColour}Installing packages...${endColour}"
+  info "Installing CLI tools and fonts..."
   paru -S --noconfirm --needed \
     fish starship \
     ripgrep fzf jq bat playerctl \
     ttf-jetbrains-mono-nerd noto-fonts-emoji
 
-
-  echo "Changing shell..."
+  info "Changing default shell to fish..."
   chsh -s /usr/bin/fish
 
-  # -------- GUI --------
-  read -p "$(echo -e ${turquoiseColour}Would You like install GUI? y/n ${endColour})" opt
-
-  case $opt in
-    [yY] )
-      paru -S --noconfirm \
+  # -------- GUI + Hyprland --------
+  ask "Would you like to install the GUI (Hyprland)? [y/N]"
+  case "$REPLY" in
+    [yY])
+      info "Installing GUI base packages..."
+      paru -S --noconfirm --needed \
         adapta-gtk-theme pavucontrol kitty \
         nerd-fonts-jetbrains-mono nerd-fonts-ubuntu-mono \
         nm-connection-editor ttf-material-design-icons-git thunar \
-        thunar-archive-plugin blueman pulseaudio-control \
+        thunar-archive-plugin blueman \
         gvfs gvfs-mtp
 
-      echo -e "${yellowColour}Installing Hyprland setup...${endColour}"
+      info "Installing Hyprland setup..."
+      # shellcheck source=installation_folder/hyper_install.sh
       source "$PATH_DIR/installation_folder/hyper_install.sh"
-      install_hyper "$PATH_DIR" "$USER_HOME" "${USER_NAME}"
+      install_hyper "$PATH_DIR" "$USER_HOME" "$USER_NAME"
       ;;
   esac
 
-  # -------- RAM OPT --------
-  read -p "Optimize RAM usage? (y/n) " opt
-
-  case $opt in
-    [yY] )
-      source "$PATH_DIR/installation_folder/ram_opt.sh"
+  # -------- RAM optimization --------
+  ask "Optimize RAM usage (zram + swapfile)? [y/N]"
+  case "$REPLY" in
+    [yY])
+      # ram_opt.sh needs root; run it via sudo.
+      sudo bash "$PATH_DIR/installation_folder/ram_opt.sh"
       ;;
   esac
 
-  # -------- CONFIGS --------
-  echo -e "${yellowColour}Copying configs...${endColour}"
-
+  # -------- Configs --------
+  info "Copying configs..."
   mkdir -p "$HOME/.config"
   cp -Rf "$PATH_DIR/config/." "$HOME/.config/"
   cp "$PATH_DIR/.tmux.conf" "$HOME/" || true
 
-  # -------- NVIM --------
-  echo -e "${yellowColour}Installing AstroNvim...${endColour}"
-
+  # -------- AstroNvim --------
+  info "Installing AstroNvim..."
   if [ -d "$HOME/.config/nvim" ]; then
     mv "$HOME/.config/nvim" "$HOME/.config/nvim_backup_$(date +%s)"
   fi
-
   git clone --depth 1 https://github.com/AstroNvim/AstroNvim "$HOME/.config/nvim"
-
   nvim --headless "+Lazy! sync" +qa
-
-  echo -e "${greenColour}AstroNvim installation complete!${endColour}"
 
   fc-cache -fv
 
-  echo -e "${greenColour}Installation Finished 🚀${endColour}"
+  ok "Installation finished 🚀"
 fi
