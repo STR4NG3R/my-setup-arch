@@ -24,7 +24,9 @@ This dotfile is built around one idea: **make the most of your screen real estat
 The result is a fast, keyboard-driven rice where the content fills the display
 and the chrome gets out of the way.
 
-![Hyprland rice](/img/hyprland.png)
+![Hyprland rice — btop, fastfetch and Neovim](/img/hyprland-1.png)
+
+![Hyprland rice — fastfetch, lazygit and yazi](/img/hyprland-2.png)
 
 ---
 
