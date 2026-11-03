@@ -162,30 +162,9 @@ if [[ "${1:-}" == "--user" ]]; then
         thunar-archive-plugin blueman pulseaudio-control \
         gvfs gvfs-mtp
 
-      echo -e "Choose your WM Setup${redColour}"
-      echo "1.- qTile"
-      echo "2.- i3"
-      echo -e "3.- hyprland${endColour}"
-
-      read -p "Select your option " opt
-
-      case $opt in
-        1 )
-          source "$PATH_DIR/installation_folder/qtile_install.sh"
-          install_qtile "$PATH_DIR" "$USER_HOME" "${USER_NAME}"
-          ;;
-        2 )
-          source "$PATH_DIR/installation_folder/i3_install.sh"
-          install_i3 "$PATH_DIR" "$USER_HOME" "${USER_NAME}"
-          ;;
-        3 )
-          source "$PATH_DIR/installation_folder/hyper_install.sh"
-          install_hyper "$PATH_DIR" "$USER_HOME" "${USER_NAME}"
-          ;;
-        * )
-          echo -e "${redColour}Invalid option, skipping WM installation.${endColour}"
-          ;;
-      esac
+      echo -e "${yellowColour}Installing Hyprland setup...${endColour}"
+      source "$PATH_DIR/installation_folder/hyper_install.sh"
+      install_hyper "$PATH_DIR" "$USER_HOME" "${USER_NAME}"
       ;;
   esac
 

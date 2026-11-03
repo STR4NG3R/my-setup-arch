@@ -67,14 +67,6 @@ The Hyprland configuration is split into Lua modules:
 
 ---
 
-# Qtile Setup
-![Qtile](/img/qtile.png)
-
-# i3 Setup
-![i3](/img/i3.png)
-
----
-
 # Usage
 
 ```bash
@@ -85,17 +77,15 @@ sudo ./script-install.sh
 ```
 
 The installer detects CPU microcode, GPU drivers and Bluetooth, installs the base
-packages, then lets you pick a WM setup (Qtile / i3 / Hyprland) and copies the configs.
+packages, sets up the Hyprland environment and copies the configs.
 
 ## Features
 
-_Uniform keybindings across the Qtile, i3 and Hyprland setups._
-
 | Software I use |
 | -------------- |
-| Hyprland / Qtile / i3 |
+| Hyprland       |
 | paru           |
-| waybar / polybar |
+| waybar         |
 | swaync         |
 | AstroNvim      |
 | kitty          |
